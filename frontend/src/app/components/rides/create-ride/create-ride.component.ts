@@ -146,7 +146,7 @@ export class CreateRideComponent {
   selectedDate: any;
   selectedTime: any;
   // selectedTime: any = this.defaultTime() ;
-  minTime: any;
+  minTime: any; 
   isDateandTimeValid: boolean;
   ngOnInit(): void {
     this.waypointsForm = this.fb.group({

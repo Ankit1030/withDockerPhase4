@@ -5,11 +5,14 @@ FROM node:20-alpine as build
 WORKDIR /app
 
 # Install dependencies
-# COPY package.json package-lock.json ./
+# COPY package.json ./
 # RUN npm install -f
 
+RUN npm install -g http-server
 # Copy the rest of the application files
-COPY . .
+# COPY . .
+COPY dist/browser
+
 
 # Build the application
 # RUN npm run build
@@ -25,7 +28,8 @@ COPY . .
 # COPY nginx.conf /etc/nginx/nginx.conf
 
 # Expose port 80
-EXPOSE 80
+EXPOSE 8080
 
 # Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# CMD ["nginx", "-g", "daemon off;"]
+CMD ["http-server", "-p", "8080"]
