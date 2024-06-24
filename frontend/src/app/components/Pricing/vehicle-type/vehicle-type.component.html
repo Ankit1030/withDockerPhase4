@@ -1,0 +1,167 @@
+<!-- <div class="container">
+    <form [formGroup]="formData" class="form" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+        <div>
+          <label for="vname" class="my-2">Vehicle Type:</label>
+          <input type="text" class="form-control" id="vname" formControlName="vname">
+        </div>
+
+      <div *ngIf="showMessage">
+          <p>This message is shown because showMessage is true.</p>
+        </div>
+        
+        <button (click)="toggleMessage()">Toggle Message</button> -->
+        <!-- <div>
+          <label for="vimage" class="my-2">Vehicle Image:</label>
+          <input type="file"  id="vimage" class="form-control">
+          @if(formData.get('vimage').errors && formData.get('vimage').dirty){
+
+
+            @if(formData.get('vimage').hasError('invalidSize')){
+              <small class="text-danger">File size exceeds 5MB</small>
+            }
+            @if(formData.get('vimage').hasError('invalidType')){
+ 
+              <small class="text-danger">Invalid file type. Only PNG , JPG and JPEG allowed.</small>
+            }
+          }
+        < <div *ngIf="formData.get('vimage').errors && formData.get('vimage').dirty">
+            <div *ngIf="formData.get('vimage').hasError('invalidSize')">File size exceeds 5MB</div>
+            <div *ngIf="formData.get('vimage').hasError('invalidType')">Invalid file type. Only PNG and JPEG allowed.</div>
+          </div> -->
+        <!-- <br>
+        <button class="form-control" 
+        type="submit"
+        [ngClass]="{'btn-enabled': formData.valid, 'btn-disabled': !formData.valid}" 
+        [disabled]="!formData.valid">Submit</button>
+      </form>
+</div>  -->
+
+
+<!-- //----------------------------------------------------------------------------------------------------------------------------- -->
+
+
+<!-- <div class="row justify-content-center">
+  <div class="col-md-10">
+    <form class="form" (ngSubmit)="Submit(vehicleForm)" #vehicleForm="ngForm">
+      <div class="form-group">
+        <label for="vname" form-control>Name:</label>
+        <input type="text" class="my-2 form-control" id="vname" name="vname" ngModel #vname="ngModel" placeholder="Enter name" required minlength="3">
+        @if(vname.invalid && vname.touched){
+          <small class="text-danger">min length is 3 </small>
+        }
+      </div>
+      <div class="form-group" form-control>
+        <label for="vimage">Image:</label>
+        <input type="file" (change)="onFileChange($event)" accept="image/jpeg, image/png, image/jpg"  class="my-2 form-control form-control-file" id="vimage" required ngModel name="vimage">
+        @if(fileSizeError){
+            <small class="text-danger"> this file size limited upto 5 MB </small>
+          }
+          @if(fileTypeError){
+            <small class="text-danger"> Only JPG, PNG, and JPEG files are allowed.</small>
+          }
+          
+        </div>
+        <button type="submit" class="my-2 btn form-control btn-primary" [disabled]="vehicleForm.invalid">Submit</button>
+      </form>
+    </div>
+  </div> -->
+  
+  <!-- //----------------------------------------------------------------------------------------------------------------------------- -->
+  
+  <div class="container-fluid">
+    <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+     
+        <label for="vname" class="my-2 ">Vehicle Name:</label>
+        <input type="text" class="form-control" id="vname" formControlName="vname">
+        <div *ngIf="vehicleForm.get('vname').invalid && vehicleForm.get('vname').dirty" class="text-danger" >
+          <div *ngIf="vehicleForm.get('vname').errors?.['required']">
+            Vehicle Name is required
+          </div>
+          <div *ngIf="vehicleForm.get('vname').errors?.['customPattern']">
+            Vehicle Name is start with min 3 alphabet
+          </div>
+        </div>
+        <!-- <div *ngIf="vehicleForm.get('vname').invalid && vehicleForm.get('vname').dirty" >
+        </div> -->
+        <!-- HTML content -->
+          
+
+          <!-- comment
+          <div class="row mb-3">
+  <label class="form-label">Upload image :</label>
+  <div class="col-2 d-flex align-items-center">
+    <img class="preview_img" [src]="previewImageUrl" alt="">
+  </div>
+  <div class="col-10">
+    <div class="file-upload text-secondary">
+      <input type="file" id="image" name="image" required accept="image/*" (change)="handleFileInput($event)">
+      <span class="fs-4 fw-2">Choose file...</span>
+      <span> Or drag and drop file..</span>
+    </div>
+  </div> 
+</div>
+
+          -->
+
+          <!----------------------------------------------------  -->
+          <label class="form-label my-2" for="vimage">Vehicle image :</label>
+          <div class="row gap-5">
+            <div class="col-1">
+                <img class="preview_img" [src]=defaultprofilesrc alt="Preview Image">
+            </div>
+            <div class="col-10">
+                <div class="file-upload text-secondary">
+                    <input type="file" formControlName="vimage" class="form-control" id="vimage" (click)="onFileInputClick()" (change)="onFileChange($event)">
+                    <span class="fs-4 fw-2">Choose file...</span>
+                    <span> {{selected_imagename}}</span>
+                </div>
+            </div> 
+        </div>
+          
+          <!----------------------------------------------------  -->
+      
+        <!-- <label for="vimage" class="my-2">Vehicle Image:</label>
+        <img class="preview_img" [src]=defaultprofilesrc alt="Preview Image">
+        <input type="file" formControlName="vimage" class="form-control" id="vimage" (click)="onFileInputClick()" (change)="onFileChange($event)"> -->
+        <div *ngIf="fileSizeError" class="text-danger">File size exceeds 5MB</div>
+        <div *ngIf="fileTypeError" class="text-danger">Invalid file type. Only PNG and JPEG allowed.</div>
+        @if(!isimageupdated && vehicleForm.touched){
+          <div style="color: rgb(193, 69, 7);"> ! Image is required</div>
+        }
+        <button *ngIf="updatebtnstatus" type="button" class="my-3 form-control btn btn-success" (click)="update()">Update</button>
+      <button type="submit" *ngIf="!updatebtnstatus" class="my-3 form-control btn btn-primary">Submit</button>
+    </form>
+    <!-- GRID VIEW---------------------------------------------- -->
+    @if(vehicles){
+      <div class="table-container">
+      <table class="table table-bordered table-hover align-middle" style="text-align: center;" >
+        <thead >
+          <tr>
+        <th width="25%">Vehicle Name</th>
+        <th width="50%">Vehicle Image</th>
+        <th width="25%">Edit</th>
+      </tr>
+    </thead>
+    <!-- <div> -->
+    <tbody>
+        
+        @for(vehicle of vehicles; track vehicle._id){
+          
+          <tr [attr.id]="vehicle._id">
+            <td>{{ vehicle.vname }}</td>
+            <td>
+              <img [src]="backendUrl+'/uploads/vehicles/'+vehicle.vimage" onerror="this.src=backendUrl+'/uploads/defaultv.png';" style="border-radius: 50%;" alt="Vehicle Image" width="100" height="100">
+          <!-- <img [src]=getImagePath(vehicle.vimage) alt="Vehicle Image" width="100" height="100"> -->
+        </td>
+        <td>
+          <button class="btn btn-primary" (click)="editVehicle(vehicle)">Edit</button>
+        </td>
+      </tr>
+    }
+    
+    
+  </tbody>
+</table>
+</div>
+}
+</div>

@@ -1,0 +1,56 @@
+<div class="container-fluid">
+    
+<form [formGroup]="cityForm">
+    <!-- @if(countries){ -->
+
+        <div class="">
+            
+            <label class="" for="country">Country:</label>
+            <select class="form-select" formControlName="country" (change)="onCountrySelect()" >
+                <option value="" disabled="true">
+                    Select country
+                </option>
+                @for(country of countries;track country._id){
+                    <option [value]="country.ccode + ' ' + country._id">
+                        {{ country.cname }}
+                    </option>
+                }
+        </select>
+        <div *ngIf="cityForm.get('country').invalid && (cityForm.get('country').touched)" class="text-danger">please select a country</div>
+    </div>
+<!-- } -->
+    
+    <!-- <div class=""> -->
+        <!-- <div class=""> -->
+            <div class="">
+                <label for="city" class=" ">City:</label>
+                <input type="text" class="form-control" id="city" formControlName="mycity" placeholder="Enter city name">
+                <!-- <div *ngIf="cityForm.get('mycity').invalid && (cityForm.get('mycity').touched)" class="text-danger">Please select a city</div> -->
+            </div>
+            <div class="">
+                <label for="city" class="">Already added City List:</label>
+                <select class="form-select" formControlName="city" (change)="onallreadySelectCity()">
+                    @for(city of allcities;track city._id){
+                    <option [value]="city.city">
+                        {{ city.city }}
+                    </option>
+                    }
+                </select>
+            </div>
+        <!-- </div> -->
+        
+    <!-- </div> -->
+    <div id="map" class="m-2" style="width: 100%; height: 60vh;"></div>
+
+
+      <button class="btn btn-dark form-control" type="button" (click)="sendPolygonDataToServer()">{{ buttonName }}</button>
+
+</form>
+
+</div>
+
+
+    
+
+
+  

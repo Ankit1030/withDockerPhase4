@@ -1,0 +1,188 @@
+<form [formGroup]="settingForm" (ngSubmit)="submitSettings()">
+  <!-- Stripe Settings -->
+  <div class="mb-4">
+    <h2>Stripe Settings</h2>
+    <div class="mb-3 input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Private Key</span>
+      </div>
+      <input type="text" id="privateKey" class="form-control" formControlName="stripe_privateKey">
+    </div>
+    <div class="mb-3 input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Publish Key</span>
+      </div>
+      <input type="text" id="publishKey" class="form-control" formControlName="stripe_publishKey">
+    </div>
+  </div>
+
+  <!-- Twilio Settings -->
+  <div class="mb-4">
+    <h2>Twilio Settings</h2>
+    <div class="mb-3 input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Twilio SID</span>
+      </div>
+      <input type="text" id="twilioSid" class="form-control" formControlName="twilioSid">
+    </div>
+    <div class="mb-3 input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Twilio Auth Token</span>
+      </div>
+      <input type="text" id="twilioAuthToken" class="form-control" formControlName="twilioAuthToken">
+    </div>
+    <div class="mb-3 input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Twilio Number</span>
+      </div>
+      <input type="text" id="twilioNumber" class="form-control" formControlName="twilioNumber">
+    </div>
+  </div>
+
+  <!-- Nodemailer Settings -->
+  <div class="mb-4">
+    <h2>Nodemailer Settings</h2>
+    <div class="mb-3 input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Email</span>
+      </div>
+      <input type="email" id="email" class="form-control" formControlName="node_email">
+    </div>
+    <div class="mb-3 input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Email Password</span>
+      </div>
+      <input type="password" id="emailPassword" class="form-control" formControlName="node_emailPassword">
+    </div>
+  </div>
+
+  <!-- Ride Settings -->
+  <div class="mb-4">
+    <h2>Ride Settings</h2>
+    <div class="mb-3 input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Number of Stops</span>
+      </div>
+      <select id="numberOfStops" class=" form-select" formControlName="ride_stops">
+        <option value="1">1 stop</option>
+        <option value="2">2 stop</option>
+        <option value="3">3 stop</option>
+        <option value="4">4 stop</option>
+        <option value="5">5 stop</option>
+      </select>
+    </div>
+    <div class="mb-3 input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Request Timeout</span>
+      </div>
+      <select id="requestTimeout" class="with-scroll form-select" formControlName="ride_approvalTime">
+        <option value="10">10 seconds</option>
+        <option value="20">20 seconds</option>
+        <option value="30">30 seconds</option>
+        <option value="45">45 seconds</option>
+        <option value="60">60 seconds</option>
+        <option value="90">90 seconds</option>
+        <option value="120">120 seconds</option>
+      </select>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+
+
+
+<!-- <div class="container">
+  <form>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="input1">Field 1</label>
+          <input type="text" class="form-control" id="input1" placeholder="Enter Field 1" formControlName="field1">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="input2">Field 2</label>
+          <input type="text" class="form-control" id="input2" placeholder="Enter Field 2" formControlName="field2">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="input3">Field 3</label>
+          <input type="text" class="form-control" id="input3" placeholder="Enter Field 3" formControlName="field3">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="input4">Field 4</label>
+          <input type="text" class="form-control" id="input4" placeholder="Enter Field 4" formControlName="field4">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="input5">Field 5</label>
+          <input type="text" class="form-control" id="input5" placeholder="Enter Field 5" formControlName="field5">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="input6">Field 6</label>
+          <input type="text" class="form-control" id="input6" placeholder="Enter Field 6" formControlName="field6">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="input7">Field 7</label>
+          <input type="text" class="form-control" id="input7" placeholder="Enter Field 7" formControlName="field7">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="input8">Field 8</label>
+          <input type="text" class="form-control" id="input8" placeholder="Enter Field 8" formControlName="field8">
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div> -->
+
+
+
+<!-- <h2 class="bg-info py-3 text-white rounded px-3"> Time and Stops Settings</h2>
+<div class="container-fluid mt-4">
+  <form (ngSubmit)="submitForm()">
+    <div class="form-group">
+      <label for="secondsSelect">Approval Time:</label>
+      <select [(ngModel)]="new_seconds" name="seconds" class="form-control my-2" id="secondsSelect">
+        <option value="10">10 seconds</option>
+        <option value="20">20 seconds</option>
+        <option value="30">30 seconds</option>
+        <option value="45">45 seconds</option>
+        <option value="60">60 seconds</option>
+        <option value="90">90 seconds</option>
+        <option value="120">120 seconds</option>
+      </select>
+    </div>
+    <div class="form-group my-4">
+      <label for="stopsInput">Number of Stops (1-5):</label>
+      <select [(ngModel)]="new_stops" name="stops" class="form-control my-2">
+        <option value="1">1 stop</option>
+        <option value="2">2 stop</option>
+        <option value="3">3 stop</option>
+        <option value="4">4 stop</option>
+        <option value="5">5 stop</option>
+      </select>
+    </div>
+    <button type="submit" class="form-control btn btn-success btn-lg">Update</button>
+  </form>
+   -->

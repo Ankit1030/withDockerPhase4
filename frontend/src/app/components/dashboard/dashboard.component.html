@@ -1,0 +1,88 @@
+
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+    <!-- <span class="mx-3 ">ADMIN</span> -->
+    <div class="d-flex container-fluid justify-content-between">
+
+        <div>
+            <span class="fs-4 mx-3">ADMIN PANEL</span>
+        </div>
+        <div class="mx-3 d-flex gap-3">
+            <!-- Notification icon button -->
+            <button class="btn btn-outline-light me-2 position-relative" type="button">
+                <i class="bi bi-bell"></i>
+                <span *ngIf="notificationNumnber > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ notificationNumnber }}</span>
+                <!-- <span *ngIf="pushNotificationService.notificationCount > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ pushNotificationService.notificationCount }}</span> -->
+            </button>
+            <!-- <button class="btn btn-outline-light me-2 position-relative" type="button">
+                <i class="bi bi-bell"></i>
+                <span *ngIf="notificationCount > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  {{ notificationCount }}
+                </span> -->
+            <div class="dropdown">
+                <a class="btn text-white fs-5 dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://img.freepik.com/premium-vector/people-profile-graphic_24911-21373.jpg" alt="Photo" class="rounded-circle me-1" style="width: 30px; height: 30px;">
+                    Ankit
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li><a class="dropdown-item fw-bolder fs-4" (click)="Logout()">+Logout</a></li>
+                </ul>
+            </div>
+            
+            
+
+        </div>
+    </div>
+</nav>
+<div id="wrapper" class="row m-0 p-0 d-flex flex-row " style="height: 92.7vh " >
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper" class="col-xl-2 col-sm-3 bg-dark text-white">
+        <ul class="sidebar-nav py-4 " style="width: 94%;">
+            <li>
+                <span class="fs-4 mb-3">Rides</span>
+                <ul class="list-unstyled">
+                    <li><a routerLink="create-ride" routerLinkActive="active">Create Ride</a></li>
+                    <li><a routerLink="confirmed-ride" routerLinkActive="active">Confirmed Ride</a></li>
+                    <li><a routerLink="ride-history" routerLinkActive="active">Ride History</a></li>
+                </ul>
+            </li>
+            <li>
+                <a class="fs-4 mb-3" routerLink="users" routerLinkActive="active">Users</a>
+            </li>
+            <li>
+                <span class="fs-4 mb-3">Drivers</span>
+                <ul class="list-unstyled">
+                    <li><a routerLink="lists" routerLinkActive="active">Lists</a></li>
+                    <li><a routerLink="running-requests" routerLinkActive="active">Running requests</a></li>
+                </ul>
+            </li>
+            <li>
+                <span class="fs-4 mb-3">Pricing</span>
+                <ul class="list-unstyled">
+                    <li><a routerLink="country" routerLinkActive="active">Country</a></li>
+                    <li><a routerLink="city" routerLinkActive="active">City</a></li>
+                    <li><a routerLink="vehicles-types" routerLinkActive="active">Vehicles Types</a></li>
+                    <li><a routerLink="vehicle-pricing" routerLinkActive="active">Vehicle Pricing</a></li>
+                </ul> 
+            </li>
+            <li>
+                <a class="fs-4 mb-3" routerLink="settings" routerLinkActive="active">Settings</a>
+            </li>
+        </ul>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper" class="col-xl-10 col-sm-9 col-12 m-0 p-0" style="height: 92.5vh; overflow-y: auto;">
+    <!-- <div id="page-content-wrapper" class="flex-grow-1"> -->
+        <div class="spinnerconent" *ngIf="darshan.loader">
+            <div class="spinnerclass">
+                <mat-progress-spinner color="accent" mode="indeterminate" value="50"></mat-progress-spinner>
+            </div>
+        </div>
+        <div class="container-fluid mt-2">
+            <router-outlet></router-outlet>
+
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+</div>

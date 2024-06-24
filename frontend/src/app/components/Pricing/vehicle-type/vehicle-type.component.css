@@ -1,0 +1,68 @@
+
+  /* Enabled button */
+.btn-enabled {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  /* Disabled button */
+  .btn-disabled {
+    background-color: #6c757d;
+    color: #fff;
+    cursor: not-allowed;
+  }
+  /* Custom CSS to remove hover effect on buttons */
+.btn.no-hover:hover {
+  background-color: inherit;
+  border-color: inherit;
+  color: inherit;
+}
+th{
+  background-color: #497fdb;
+  color: white;
+
+}
+.table-container {
+  overflow-y: auto;
+  max-height: 630px; /* Adjust the height as needed */
+}
+
+th,td {
+  vertical-align: middle;
+}
+
+.preview_img{
+  margin-left: 10px ;
+  height: 8vw;
+  width: 8vw;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 5px solid rgb(226, 242, 247);
+  /* background-color: black; */
+}
+.file-upload{
+  /* width: 70vw; */
+  /* margin-left: -10px; */
+  position: relative;
+
+
+  align-items: center;
+  justify-content: center;
+  height: 7.5vw;
+  padding: 30px;
+  border: 3px dashed rgb(146, 142, 142);
+  border-radius: 8px;
+}
+
+.file-upload input{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  opacity: 0;
+  background-color: pink;
+
+}

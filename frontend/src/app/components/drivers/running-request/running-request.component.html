@@ -1,0 +1,79 @@
+
+<div class="container-fluid ">
+  <div class="fs-4 fw-bolder text-info text-center m-3">Timeout : {{Timeout}} seconds</div>
+    <table class="table table-responsive table-bordered table-striped  align-middle w-100">
+        <thead class="table-dark fs-5">
+            <tr>
+                <th>User Profile</th>
+                <th>Username</th>
+                <th>User Phone</th>
+                <th>Driver Name</th>
+                <th>Driver Phone</th>
+                <th>Book Time</th>
+                <th>Pickup Address</th>
+                <th>Drop-off Address</th>
+                <th>Service Type</th>
+                <th>Service Image</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            <tr></tr>
+        </thead>
+        <tbody>
+            <tr class="text-center" *ngFor="let item of allRequestsArray; let i = index">
+                <!-- <td>{{ item.userDetails.uimage }}</td> -->
+                @if(item.driverDetails && item.ridestatus !== 7){
+                <td><img [src]="backendUrl+'/uploads/allusers/'+item.userDetails.uimage" [alt]=item.userDetails.uname style="max-height: 60px;"></td>
+                <td>{{ item.userDetails.uname }}</td>
+                <td>{{ item.userDetails.uphone }}</td>
+                <td>{{ item.driverDetails.dname }}</td>
+                <td>{{ item.driverDetails.dphone }}</td>
+                <td>{{ item.bookTime }}</td>
+                <td>{{ item.fromLocation }}</td>
+                <td>{{ item.toLocation }}</td>
+                <td>{{ item.vehicleDetails.vname }}</td>
+                <td><img [src]="backendUrl+'/uploads/vehicles/'+item.vehicleDetails.vimage" [alt]=item.vehicleDetails.vname style="max-height: 60px;"></td>
+                <td><div class="p-2 bg-secondary rounded-3 text-white"  >
+                    @switch (item.ridestatus) {
+                    
+                      @case (1) {
+                        Assigning
+                      }
+                      @case (3) {
+                        Accepted
+                      }
+                      @case (4) {
+                        Arrived
+                      }
+                      @case (5) {
+                       Picked
+                      }
+                    }
+                  </div></td>
+                <td >
+                  <div class="d-flex gap-2 justify-content-start">
+                    <button class="btn btn-success" (click)="acceptAction(item._id,item.driverDetails._id,i)">
+                      <!-- Accept -->
+                      <!-- @switch (item.ridestatus) {
+                        @case (1) { -->
+                          Accept
+                        <!-- }
+                        @case (3) {
+                          Arrive
+                        }
+                        @case (4) {
+                         Pick Up
+                        }
+                         @case (5) {
+                         Complete
+                         }
+                      } -->
+                    </button>
+                    <button *ngIf="item.ridestatus === 1" class="btn btn-danger" (click)="rejectAction(item._id,i)">Reject</button>
+                  </div>
+                </td>
+              }
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,141 @@
+
+ .custom-navbar {
+            background-color: #007bff; /* Blue color */
+            color: #fff; /* Text color */
+            height: 70px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0.3rem;
+            right: 11rem;
+            padding: 4px 8px;
+            border-radius: 50%;
+            background-color: red;
+            color: white;
+            font-size: 12px;
+          }
+            
+.sidebar-nav {
+    position: absolute;
+    top: 0;
+    /* width: 250px; */
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-nav li {
+    text-indent: 20px;
+    line-height: 40px;
+}
+
+.sidebar-nav li a {
+    display: block;
+    text-decoration: none;
+    color: #999999;
+}
+
+.sidebar-nav li a:hover {
+    text-decoration: none;
+    color: #fff;
+    background: rgba(255,255,255,0.2);
+}
+
+/* .sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+    text-decoration: none;
+} */
+
+.sidebar-nav > .sidebar-brand {
+    height: 65px;
+    font-size: 18px;
+    line-height: 60px;
+}
+
+.sidebar-nav > .sidebar-brand a {
+    color: #999999;
+}
+
+.sidebar-nav > .sidebar-brand a:hover {
+    color: #fff;
+    background: none;
+}
+
+/* Toggle Styles */
+
+/* #wrapper {
+    padding: 0;
+    margin: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+    height: 92vh; 
+    overflow-y: auto; 
+} */
+.mb10{
+    margin-top: 10px;
+}
+
+/* #wrapper.toggled {
+    padding-left: 250px;
+} */
+ 
+/*  */
+/* .active-link {
+    background-color: #007bff; /* Change to the desired color */
+    /* color:fff;  */
+  .active {
+    /* min-width: 12rem; */
+    background-color: #454646;
+    font-size: 18px;
+    transition: 0.25s;
+  }
+
+  @media screen and (min-width: 700px) {
+    #sidebar-wrapper,.sidebar-nav {
+        height: 100vh; /* Set the height as needed */
+    }
+}
+@media screen and (max-width: 700px) {
+    #sidebar-wrapper, .sidebar-nav {
+        height: 100vh; /* Set the height as needed */
+        width: 100vw;
+    }
+}
+
+.spinnerconent{
+    position: fixed;
+  width: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 9999;
+  display:flex ;
+  text-align: center;
+}
+
+.spinnerclass{
+    position: fixed;
+  width: 50%;
+  left: 50%;
+  right: 0;
+  top: 40%;
+  bottom: 0;
+}
+/* .spinnerclass{
+    position: fixed;
+  width: 100%;
+  left: 50%;
+  right: 0;
+  top: 40%;
+  bottom: 0;
+} */
+
+/* ---------------------------------------------------- */
+/*  */
+  
+/* ---------------------------------------------------- */

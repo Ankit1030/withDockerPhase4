@@ -1,0 +1,13 @@
+th{
+    background-color: #497fdb;
+    color: white;
+  
+  }
+  .table-c {
+    overflow-y: auto;
+    max-height: 650px; /* Adjust the height as needed */
+  }
+  th,td {
+    vertical-align: middle;
+    font-size: 18px;
+  }

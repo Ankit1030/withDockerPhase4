@@ -1,0 +1,357 @@
+<!-- <p>confirmed-ride works!</p> -->
+<div class="container-fluid">
+  <div class="card">
+
+    <div class="card-body">
+      <!-- app.component.html -->
+      <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <input type="text" class="form-control" formControlName="idandname" name="idno"
+              placeholder="Search by request ID, username, or phone number">
+          </div>
+          <div class="col-md-6">
+            <input type="date" class="form-control" formControlName="bookDate" name="fromDate">
+          </div>
+          <div class="col-md-6">
+            <select class="form-select" formControlName="ridestatus" name="status">
+              <!-- <option value="" selected>Service Type(null)</option> -->
+              <option value="" selected>Ride Status(all)</option>
+              @for(status of allStatus;track status._id){
+                <option [value]=status._id>
+                  @switch(status._id){
+                    @case (0){
+                      Pending
+                    }
+                    @case (1){
+                      Assigning
+                    }
+                    @case (3){
+                      Accepted
+                    }
+                  }
+                </option>
+              }
+              <!-- <option [value]=0>Pending (status)</option>
+              <option [value]=1>Assigning (status)</option>
+              <option [value]=3>Accepted (status)</option> -->
+              <!-- <option [value]=2>Hold</option> -->
+              <!-- <option [value]=4>Arrived</option>
+        <option [value]=5>Started</option> -->
+            </select>
+          </div>
+          <div class="col-md-6">
+            <select class="form-select" formControlName="vehicleid" name="servicetype">
+              <option value="" selected>Service Type(null)</option>
+              @for(vehicle of allVehicles; track vehicle._id ){
+              <option [value]=vehicle._id>{{vehicle.vname}} (servicetype)</option>
+              }
+            </select>
+          </div>
+          <div class=" d-flex justify-content-around gap-3">
+            <button type="submit" style="width: 50%;" class="btn btn-success">Filter</button>
+            <button type="button" style="width: 50%;" (click)="Clear()" class=" btn btn-dark">Clear</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+  <div class="card mt-2">
+    <!-- <div class="card-header fs-4 fw-bold text-info text-center bg-warning">
+      Ride Requests
+    </div> -->
+    <div class="card-body table-responsive p-2">
+      <table class="table table-striped table-hover align-middle w-100"
+        style="border-radius: 10px; text-align: center;">
+        <thead class="table-dark">
+          <tr class="text-center">
+            <!-- <th>Request ID</th>
+            <th>User ID</th> -->
+            <th>Ride Id</th>
+            <th>User Name</th>
+            <th>Service Type</th>
+            <th style="min-width: 5rem;">Pickup Date</th>
+            <th>Pickup Time</th>
+            <th>Pickup Location</th>
+            <th>Dropoff Location</th>
+            <th>Status</th>
+            <th>Assign</th>
+            <th colspan="2">Action</th>
+          </tr>
+        </thead>
+
+        <tbody class="text-align text-center">
+          @for(ride of allRideArray;track ride._id; let i = $index){
+          <tr class="text-center">
+
+            <td>{{ ride.ride_no }}</td>
+            <td>{{ ride.userDetails.uname }}</td>
+            <td>{{ ride.vehicleDetails.vname }}</td>
+            <td>{{ ride.bookDate }}</td>
+            <td>{{ride.bookTime}}</td>
+            <td>{{ ride.fromLocation }}</td>
+            <td>{{ ride.toLocation }}</td>
+            <td><button class="btn bg-secondary text-white" style="font-size:14px;" #statusButton>
+                @switch (ride.ridestatus) {
+                @case (0) {
+                Pending
+                }
+                @case (1) {
+                Assigning
+                }
+                @case (2) {
+                Hold
+                }
+                @case (3) {
+                Accepted
+                }
+                @case (4) {
+                Arrived
+                }
+                @case (5) {
+                Picked
+                }
+                @default {
+                Pending
+                }
+                }
+
+              </button></td>
+            <!-- <td class="p-2"><button #assignButton [disabled]="ride.driverDetails" (click)="ride.driverDetails ? null : AssignCall(ride,i)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#showDriverDetails"> -->
+            <td class="p-2"><button #assignButton class="btn btn-primary" (click)="AssignCall(ride,i)"
+                data-bs-toggle="modal" data-bs-target="#showDriverDetails">
+                @if(ride.driverDetails){
+                {{ride.driverDetails.dname}}
+                }@else if(ride.ridestatus === 2){
+                Hold
+                }@else{
+                Assign
+                }
+
+              </button></td>
+            <td class="">
+              <!-- <button class="btn btn-info">Ride Info</button> -->
+              <!-- <button class="btn btn-info"><i style="color: black;" class="bi bi-info-circle"></i>
+              </button> -->
+              <button class="btn fw-bold text-white" [ngClass]="getNextStatus(ride.ridestatus)"
+                (click)="UpdateAction(ride._id,ride.ridestatus,ride.driverDetails)">
+                <!-- Accept -->
+                @switch (ride.ridestatus) {
+                @case (0) {
+                Cancel
+                }
+                @case (1) {
+                Assigning
+                }
+                @case (2) {
+                Assigning
+                }
+                @case (3) {
+                Arrive
+                }
+                @case (4) {
+                Pick Up
+                }
+                @case (5) {
+                Complete
+                }
+                }
+              </button>
+            </td>
+            <td class="">
+              <!-- <button class="btn btn-danger" (click)="delete(ride._id)">Cancel</button> -->
+              <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#showRideDetails"
+                (click)="InfoModalData(ride)">info</button>
+              <!-- <button class="btn btn-danger">Cancel Ride</button> -->
+            </td>
+          </tr>
+          }
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ---------ALL POPUP MODAL STARTS HERE  ---------------------------- -->
+
+  <div class="modal fade" #showDriverDetails id="showDriverDetails" tabindex="-1"
+    aria-labelledby="showDriverDetailsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class=" modal-content">
+        <div class="modal-header">
+          <!-- <h5 class="modal-title" id="showDriverDetailsLabel">Add Country</h5> -->
+          <button type="button" class="btn-close mr-2" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body table-responsive">
+
+          <!-- <div [ngClass]="ride.driverDetails ? 'name-button-styling' : 'button-styling'"> -->
+          @if(showpopup){
+          <table class="table  table-hover align-middle w-100">
+            <thead class="table-light">
+              <tr class="text-center">
+                <th>Profile</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>+91 Phone</th>
+                <th>City </th>
+                <th>Service</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody *ngIf="ride">
+              <tr class="text-center" *ngFor="let driverdetail of alldetailsofDriver">
+                <td><img style="width: 50px; height:30px;"
+                    [src]="backendUrl+'/uploads/alldrivers/'+driverdetail.profile" alt="Driver img"></td>
+                <td>{{driverdetail.name}}</td>
+                <td>{{driverdetail.email}}</td>
+                <td> {{ride.callcode}} {{driverdetail.phone}}</td>
+                <td>{{ride.cityname}}</td>
+                <td>{{ride.vehicleDetails.vname}}</td>
+                <td><button class="btn btn-primary" (click)="AssignMe(driverdetail)">Assign Me</button></td>
+
+              </tr>
+              <tr>
+                <td colspan="7">
+                  <button class="btn btn-success w-100" (click)="NearestDriver(ride._id)">Assign Nearest Driver</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!---------------------------------INSIDE POPUP-----RIDE DETAILS---------------------------------->
+         
+          }@else{
+          <h1>Request is already assigned to Driver For this Ride</h1>
+          }
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" #closeButton data-bs-dismiss="modal">Close</button>
+
+          <!-- <button type="button" (click)="onSubmit()" [disabled]="" class="btn btn-primary">Save Country</button> (click)="onclick()" -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ----------------------------------RIDE INFO POPUP modal ----------------------->
+
+  <div class="modal fade" #showRideDetails id="showRideDetails" tabindex="-1" aria-labelledby="showRideDetailsLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class=" modal-content">
+        <div class="modal-header">
+          <!-- <h5 class="modal-title" id="showRideDetailsLabel">Add Country</h5> -->
+          <button type="button" class="btn-close mr-2" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body table-responsive">
+
+          <!-- <div [ngClass]="ride.driverDetails ? 'name-button-styling' : 'button-styling'"> -->
+
+
+          <!---------------------------------INSIDE POPUP-----RIDE DETAILS---------------------------------->
+          <!-- <div class="" > -->
+          <h2>Ride Details</h2>
+          <div class="table-responsive">
+            <table id="rideinfo" class="table ">
+              <tbody *ngIf="ride">
+                <tr>
+                  <td>Request id</td>
+                  <td>: {{ride._id}}</td>
+                </tr>
+                <tr>
+                  <td>User id</td>
+                  <td>: {{ride.userDetails._id}}</td>
+                </tr>
+                <tr>
+                  <td>User Profile</td>
+                  <td><img class="" [src]="backendUrl+'/uploads/allusers/'+ride.userDetails.uimage"
+                      style="border-radius: 50%;" alt="Vehicle Image" width="80" height="80"></td>
+                </tr>
+                <tr>
+                  <td>User name</td>
+                  <td>: {{ride.userDetails.uname}}</td>
+                </tr>
+                <tr>
+                  <td>User Email</td>
+                  <td>: {{ride.userDetails.uemail}}</td>
+                </tr>
+                <tr>
+                  <td>User Phone</td>
+                  <td>: {{ride.userDetails.uphone}}</td>
+                </tr>
+                <tr>
+                  <td>Booking Time</td>
+                  <td>: {{ ride.bookDate }} ({{ride.bookTime}})</td>
+                </tr>
+                <tr>
+                  <td>Pickup Location</td>
+                  <td>: {{ride.fromLocation}}</td>
+                </tr>
+                <tr>
+                  <td>Drop-off Location</td>
+                  <td>: {{ride.toLocation}}</td>
+                </tr>
+                @if(ride.waypointsLocation.length > 0){
+                <tr>
+                  <td>Waypoint</td>
+                  <td>: {{ride.waypointsLocation}}</td>
+                </tr>
+                }@else{
+                <tr>
+                  <td>Waypoint</td>
+                  <td>: null</td>
+                </tr>
+                }
+                <tr>
+                  <td>Service Type</td>
+                  <td>: {{ride.vehicleDetails.vname}}</td>
+                </tr>
+                <tr>
+                  <td>Total Distance</td>
+                  <td>: {{ride.rideDistance}} km</td>
+                </tr>
+                <tr>
+                  <td>Estimated Time</td>
+                  <td>: {{ride.estimatedTime}}</td>
+                </tr>
+                <tr>
+                  <td>Estimated Fare Price</td>
+                  <td>: {{ride.estimatedFarePrice }}</td>
+                </tr>
+                @if(ride.driverDetails){
+                <tr>
+                  <td> Driver Profile </td>
+                  <td><img class="" [src]="backendUrl+'/uploads/alldrivers/'+ride.driverDetails.dimage"
+                      style="border-radius: 50%;" alt="Vehicle Image" width="80" height="80"></td>
+                </tr>
+                <tr>
+                  <td> Driver Name </td>
+                  <td>: {{ ride.driverDetails.dname }}</td>
+                </tr>
+                <tr>
+                  <td> Driver Phone no. </td>
+                  <td>: {{ ride.driverDetails.dphone }}</td>
+                </tr>
+                <tr>
+                  <td> Driver E-mail</td>
+                  <td>: {{ ride.driverDetails.demail }}</td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          <!-- </div> -->
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" #closeButton data-bs-dismiss="modal">Close</button>
+
+          <!-- <button type="button" (click)="onSubmit()" [disabled]="" class="btn btn-primary">Save Country</button> (click)="onclick()" -->
+        </div>
+      </div>
+    </div>
+  </div>

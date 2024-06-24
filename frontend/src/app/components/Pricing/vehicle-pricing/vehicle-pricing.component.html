@@ -1,0 +1,343 @@
+<div class="form-container">
+  <form [formGroup]="pricingForm" (ngSubmit)="onSubmit()">
+    <table>
+      <tbody id="label-table">
+        <tr>
+          <td><label class=" " for="country">Country :</label></td>
+          <td colspan="3"><select formControlName="countryid" id="country" class="form-select"
+              (change)="onCountrySelect()">
+              <option [disabled]="true" value="">{{defaultcountry}}</option>
+              <option *ngFor="let country of countries" [attr.data-value]="country.countryid.cname"
+                [value]="country._id">{{ country.countryid.cname }}</option>
+            </select>
+            <div *ngIf="pricingForm.get('countryid').invalid && pricingForm.get('countryid').touched"
+              class="error-message text-danger">
+              Please select a country.
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><label class=" " for="city">City :</label></td>
+          <td colspan="3">
+            <select formControlName="cityid" class="form-select" (change)="onCitySelect()" id="city">
+              <option [disabled]="true" value="">{{defaultcity}}</option>
+              <option *ngFor="let city of allcities" [attr.data-value]="city.city" [value]="city._id">{{ city.city }}
+              </option>
+            </select>
+            <div *ngIf="pricingForm.get('cityid').invalid && pricingForm.get('cityid').touched"
+              class="error-message text-danger">
+              Please select a city.
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><label class=" " for="type">Vehicle Type :</label></td>
+          <td colspan="3">
+            <select formControlName="vehicleid" class="form-select" id="vehicletype" (change)="onVehicleSelect()">
+              <option [disabled]="1" value="">{{defaultvehicle}}</option>
+              <option *ngFor="let vehicle of allvehicles" [attr.data-value]="vehicle.vname" [value]="vehicle._id">{{
+                vehicle.vname }}</option>
+            </select>
+            <div *ngIf="pricingForm.get('vehicleid').invalid && pricingForm.get('vehicleid').touched"
+              class="error-message text-danger">
+              Please select a vehicle type.
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label class=" " for="driverProfit">Driver Profit :</label>
+          </td>
+          <td>
+            <div class="input-group  ">
+
+              <input type="number" class="form-control" formControlName="driverProfit"
+                (keypress)="isValidInput($event)">
+              <div class="input-group-append ">
+
+                <div class="centered-container input-group-text text-secondary bg-secondary-50 border-rounded border"> ?
+                  <div class="tooltip-container">
+                    <div class="tooltip-text">The driver profit is the amount of money that a driver earns from their gross earnings</div>
+                    <!-- <div class="tooltip-text">This is a tooltip</div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text-danger"
+              *ngIf="pricingForm.get('driverProfit').invalid && (pricingForm.get('driverProfit').dirty || pricingForm.get('driverProfit').touched)">
+              This is Invalid bro
+              <div *ngIf="pricingForm.get('driverProfit').errors?.['required']">
+                Profit is required.
+              </div>
+              <div
+                *ngIf="pricingForm.get('driverProfit').errors?.['numeric'] && !pricingForm.get('driverProfit').errors?.['required']">
+                Please enter a number between 0 and 100 with up to two decimal places.
+              </div>
+
+              <div *ngIf="pricingForm.get('driverProfit').errors?.['invalidNumber']">
+                Number must be between 1 and 100.
+              </div>
+            </div>
+            <!-- <div *ngIf="pricingForm.get('driverProfit').invalid && pricingForm.get('driverProfit').touched" class="error-message text-danger">
+          Driver Profit is required.
+        </div> -->
+          </td>
+
+          <td>
+            <label class=" " for="minFare">Min. Fare :</label>
+          </td>
+          <td>
+            <input type="number" class="form-control" formControlName="minFare" (keypress)="isValidInput($event)">
+            <div *ngIf="pricingForm.get('minFare').invalid && pricingForm.get('minFare').touched"
+              class="error-message text-danger">
+              <div *ngIf="pricingForm.get('minFare').errors?.['required']">
+                Min. Fare is required.
+              </div>
+              <div
+                *ngIf="pricingForm.get('minFare').errors?.['numeric'] && !pricingForm.get('minFare').errors?.['required']">
+                Please enter a number between 0 and 100 with up to two decimal places.
+              </div>
+
+              <div *ngIf="pricingForm.get('minFare').errors?.['invalidNumber']">
+                Number must be between 1 and 100.
+              </div>
+
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <label class=" " for="distanceBasePrice">Distance for base price :</label>
+          </td>
+          <td>
+            <input type="number" class="form-control" formControlName="distanceBasePrice"
+              onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+            <div *ngIf="pricingForm.get('distanceBasePrice').invalid && pricingForm.get('distanceBasePrice').touched"
+              class="error-message text-danger">
+              Distance for base price is required.
+            </div>
+          </td>
+
+          <td>
+            <label class=" " for="basePrice">Base Price :</label>
+          </td>
+          <td>
+            <input type="number" class="form-control" formControlName="basePrice" (keypress)="isValidInput($event)">
+            <div *ngIf="pricingForm.get('basePrice').invalid && pricingForm.get('basePrice').touched"
+              class="error-message text-danger">
+              <div *ngIf="pricingForm.get('basePrice').errors?.['required']">
+                Base Price is required.
+              </div>
+              <div
+                *ngIf="pricingForm.get('basePrice').errors?.['numeric'] && !pricingForm.get('basePrice').errors?.['required']">
+                Please enter a number between 0 and 100 with up to two decimal places.
+              </div>
+
+              <div *ngIf="pricingForm.get('basePrice').errors?.['invalidNumber']">
+                Number must be between 1 and 100.
+              </div>
+
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label class=" " for="pricePerUnitDistance">Price Per Unit Distance :</label>
+          </td>
+          <td>
+            <input type="number" class="form-control" formControlName="pricePerUnitDistance"
+              (keypress)="isValidInput($event)">
+            <div
+              *ngIf="pricingForm.get('pricePerUnitDistance').invalid && pricingForm.get('pricePerUnitDistance').touched"
+              class="error-message text-danger">
+              <div *ngIf="pricingForm.get('pricePerUnitDistance').errors?.['required']">
+                Price Per Unit Distance is required.
+              </div>
+              <div
+                *ngIf="pricingForm.get('pricePerUnitDistance').errors?.['numeric'] && !pricingForm.get('pricePerUnitDistance').errors?.['required']">
+                Please enter a number between 0 and 100 with up to two decimal places.
+              </div>
+
+              <div *ngIf="pricingForm.get('pricePerUnitDistance').errors?.['invalidNumber']">
+                Number must be between 1 and 100.
+              </div>
+
+            </div>
+          </td>
+
+          <td>
+            <label class=" " for="pricePerUnitTime">Price per Unit Time (min) :</label>
+          </td>
+          <td>
+            <input type="number" class="form-control" formControlName="pricePerUnitTime"
+              (keypress)="isValidInput($event)">
+            <div *ngIf="pricingForm.get('pricePerUnitTime').invalid && pricingForm.get('pricePerUnitTime').touched"
+              class="error-message text-danger">
+              Price per Unit Time is required.
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td> <label class=" " for="maxSpace">Max Space :</label></td>
+          <td colspan="3">
+            <select class="form-control" formControlName="maxSpace">
+              <!-- <option value="">Select Max Space</option> -->
+              <option value="1"> 1</option>
+              <option value="2"> 2</option>
+              <option value="3"> 3</option>
+              <option value="4"> 4</option>
+              <option value="5"> 5</option>
+              <option value="6"> 6</option>
+            </select>
+            <div *ngIf="pricingForm.get('maxSpace').invalid && pricingForm.get('maxSpace').touched"
+              class="error-message text-danger">
+              Max Space is required.
+            </div>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- <div >
+      <select formControlName="countryid" id="country" (change)="onCountrySelect()">
+        <option [disabled]="true" value="">{{defaultcountry}}</option>
+        <option *ngFor="let country of countries" [attr.data-value]="country.cname"  [value]="country._id">{{ country.cname }}</option>
+      </select>
+      <div *ngIf="pricingForm.get('countryid').invalid && pricingForm.get('countryid').touched" class="error-message text-danger">
+        Please select a country.
+      </div>
+    </div> -->
+
+    <!-- <div>
+      <label class=" " for="city">City :</label>
+      <select formControlName="cityid" (change)="onCitySelect()" id="city">
+        <option [disabled]="true" value="">{{defaultcity}}</option>   
+        <option *ngFor="let city of allcities" [attr.data-value]="city.city" [value]="city._id">{{ city.city }}</option>          
+      </select>
+      <div *ngIf="pricingForm.get('cityid').invalid && pricingForm.get('cityid').touched" class="error-message text-danger">
+        Please select a city.
+      </div>
+    </div> -->
+    <!-- <div>
+      <label class=" " for="type">Vehicle Type :</label>
+      <select formControlName="vehicleid" id="vehicletype">
+        <option [disabled]="1" value="">{{defaultvehicle}}</option>
+        <option *ngFor="let vehicle of allvehicles" [attr.data-value]="vehicle.vname" [value]="vehicle._id">{{ vehicle.vname }}</option>
+      </select>
+      <div *ngIf="pricingForm.get('vehicleid').invalid && pricingForm.get('vehicleid').touched" class="error-message text-danger">
+        Please select a vehicle type.
+      </div>
+    </div> -->
+
+    <!-- <div class="pricing-section">
+      <div class="form-group">
+        <label class=" " for="driverProfit">Driver Profit :</label>
+        <input type="number" class="form-control" formControlName="driverProfit">
+        <div *ngIf="pricingForm.get('driverProfit').invalid && pricingForm.get('driverProfit').touched" class="error-message text-danger">
+          Driver Profit is required.
+        </div>
+      </div>
+      <div class="form-group mr">
+        <label class=" " for="minFare">Min. Fare :</label>
+        <input type="number" class="form-control" formControlName="minFare">
+        <div *ngIf="pricingForm.get('minFare').invalid && pricingForm.get('minFare').touched" class="error-message text-danger">
+          Min. Fare is required.
+        </div>
+      </div>
+      <div class="form-group">
+        <label class=" " for="distanceBasePrice">Distance for base price :</label>
+        <input type="number" class="form-control" formControlName="distanceBasePrice">
+        <div *ngIf="pricingForm.get('distanceBasePrice').invalid && pricingForm.get('distanceBasePrice').touched" class="error-message text-danger">
+          Distance for base price is required.
+        </div>
+      </div>
+      <div class="form-group mr">
+        <label class=" " for="basePrice">Base Price :</label>
+        <input type="number" class="form-control" formControlName="basePrice">
+        <div *ngIf="pricingForm.get('basePrice').invalid && pricingForm.get('basePrice').touched" class="error-message text-danger">
+          Base Price is required.
+        </div>
+      </div>
+      <div class="form-group">
+        <label class=" " for="pricePerUnitDistance">Price Per Unit Distance :</label>
+        <input type="number" class="form-control" formControlName="pricePerUnitDistance">
+        <div *ngIf="pricingForm.get('pricePerUnitDistance').invalid && pricingForm.get('pricePerUnitDistance').touched" class="error-message text-danger">
+          Price Per Unit Distance is required.
+        </div>
+      </div> -->
+    <!-- <div class="form-group mr">
+        <label class=" " for="pricePerUnitTime">Price per Unit Time (min) :</label>
+        <input type="number" class="form-control" formControlName="pricePerUnitTime">
+        <div *ngIf="pricingForm.get('pricePerUnitTime').invalid && pricingForm.get('pricePerUnitTime').touched" class="error-message text-danger">
+          Price per Unit Time is required.
+        </div>
+      </div> -->
+    <!-- <div class="form-group">
+        <label class=" " for="maxSpace">Max Space :</label>
+        <input type="number" class="form-control" formControlName="maxSpace">
+        <div *ngIf="pricingForm.get('maxSpace').invalid && pricingForm.get('maxSpace').touched" class="error-message text-danger">
+          Max Space is required.
+        </div>
+      </div>
+    </div> -->
+
+    @if(updateBtnStatus){
+
+    <button type="button" class="btn btn-success form-control" (click)="update()">Update</button>
+    }@else{
+    <button type="submit" class="btn btn-primary form-control">Submit</button>
+    }
+    <button type="button" class="btn btn-dark form-control mt-2" (click)="Resetform() ">Clear</button>
+  </form>
+</div>
+<!-- TABLE -->
+<div class="container-fluid mt-3">
+  <table class="table table-bordered table-hover align-middle" style="text-align: center;">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Country</th>
+        <th scope="col">City</th>
+        <th scope="col">Vehicle</th>
+        <th scope="col">Driver Profit</th>
+        <th scope="col">Distance for Base Price</th>
+        <th scope="col">Base Price</th>
+        <th scope="col">Min Fare</th>
+        <th scope="col">Price per Unit Distance</th>
+        <th scope="col">Price per Unit Time (min)</th>
+        <th scope="col">Max Space</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for(data of alldata;track data._id){
+      <tr [attr.id]="data._id">
+        <td>{{data.countryid}}</td>
+        <td>{{data.cityid}}</td>
+        <td>{{data.vehicleid}}</td>
+        <td>{{data.driverProfit}}</td>
+        <td>{{data.distanceBasePrice}}</td>
+        <td>{{data.basePrice}}</td>
+        <td>{{data.minFare}}</td>
+        <td>{{data.pricePerUnitDistance}} </td>
+        <td>{{data.pricePerUnitTime}} </td>
+        <td>{{data.maxSpace}}</td>
+        <td><button class="btn btn-primary" (click)="editpricing(data)">Edit</button></td>
+      </tr>
+      }
+      <!-- Add more rows as needed -->
+    </tbody>
+  </table>
+</div>

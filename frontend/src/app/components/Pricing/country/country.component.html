@@ -1,0 +1,98 @@
+<button type="button" style="height: 50px; font-size: 25px;margin-bottom: -15px;" class="form-control btn btn-primary" (click)="openform()" data-bs-toggle="modal" data-bs-target="#addCountryModal">
+    + Add Country
+  </button>
+
+  <div class="modal fade" #addCountryModal id="addCountryModal" tabindex="-1" aria-labelledby="addCountryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addCountryModalLabel">Add Country</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="countryForm">
+            <div class="mb-3">
+              <label for="countryName" class="form-label">Country Name:</label>
+              <!-- <input type="text" (keypress)="searchfield()" class="form-control" id="countryName" formControlName="countryName"> -->
+              <input type="text" (ngModelChange)="searchfield()" class="form-control" id="countryName" formControlName="countryName">
+              @if(disablesearchbtn && countryForm.get('countryName').value== ''){
+                <small class="text-danger">Country name of min length 1 alphabet is required to search</small>
+              }
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <button type="button" (click)="searchdata()" [disabled]="disablesearchbtn"  class="form-control btn btn-success">Search</button>
+                </div>
+                <div class="col-6">
+                    <button type="button" (click)="clearform()"  class="form-control btn btn-dark">Clear</button>
+                    <!-- <button type="button" (click)="closeModal()"  class="form-control btn btn-danger">FULLCLOSE</button> -->
+                </div>
+
+            </div>
+            <div class="my-2">
+              <label for="currency" class="form-label">Currency:</label>
+              <input type="text" class="form-control" id="currency" formControlName="currency">
+            </div>
+            <div class="mb-3">
+              <label for="countryCode" class="form-label">Country Code:</label>
+              <input type="text" class="form-control" id="countryCode" formControlName="countryCode">
+            </div>
+            <div class="mb-3">
+              <label for="countryCallingCode" class="form-label">Country Calling Code:</label>
+              <input type="text" class="form-control" id="countryCallingCode" formControlName="countryCallingCode">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" #closeButton data-bs-dismiss="modal">Close</button>
+            
+          <button type="button" (click)="onSubmit()" [disabled]="savecountrydisable" class="btn btn-primary">Save Country</button><!--  (click)="onclick()" -->
+        </div>
+      </div>
+    </div>
+  </div>
+<br>
+<br>
+<!-- ------------------------------GRID VIEW------------------------- -->
+@if(allcountries){
+  <!-- <div class="row container">
+    <input class="mr-sm-2 col-10 bg-secondary text-white" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-dark col-2 my-sm-0" type="submit">Search</button>
+  </div> -->
+  <form class="mb-3">
+    <input class="form-control my-2" name="searchvalue" ngModal  [(ngModel)]="searchvalue" placeholder="Search" aria-label="Search">
+    <button class="form-control btn btn-dark my-2 my-sm-0" (click)="getResult()" [disabled]="disOutSeabtn" type="button">Search</button>
+  </form>
+
+  <div class="table-c">
+    <div class="responsive">
+    <table class="table  table-bordered table-hover align-middle" style="text-align: center;" >
+      <thead>
+      <tr>
+        <th>Country Name</th>
+        <th>Country Code</th>
+        <th>Currency</th>
+        <th>Flag</th>
+        <th>Call Code</th>
+        <th>Time Zone</th>
+        
+      </tr>
+    </thead>
+    <tbody class="align-middle">
+      @for(country of allcountries;track country._id){
+        
+        <tr >
+          <td>{{ country.cname }}</td>
+          <td>{{ country.ccode }}</td>
+          <td>{{ country.ccurr }}</td>
+          <td><img style="width: 50px; height:30px;" [src]="country.flag" alt="Flag" *ngIf="country.flag"></td>
+          <td>{{ country.ccallcode }}</td>
+          <td>{{ country.tzone }}</td>
+          
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+</div>
+}

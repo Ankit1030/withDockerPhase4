@@ -1,0 +1,151 @@
+
+/* Custom styling for form select */
+.form-select {
+  appearance: none; /* Removes default styling */
+  background-color: #f8f9fa; /* Background color */
+  border: 1px solid #ced4da; /* Border color */
+  border-radius: 0.25rem; /* Border radius */
+  padding: 0.375rem 1.75rem 0.375rem 0.75rem; /* Padding */
+  font-size: 1rem; /* Font size */
+  line-height: 1.5; /* Line height */
+  width: 100%; /* Full width */
+}
+
+/* Hover and focus styles */
+.form-select:hover,
+.form-select:focus {
+  border-color: #b8daff; /* Border color on hover and focus */
+}
+
+/* Disabled state */
+.form-select:disabled {
+  background-color: #e9ecef; /* Background color for disabled state */
+  opacity: 0.65; /* Reduced opacity for disabled state */
+}
+
+/* Styling for dropdown arrow */
+.form-select:after {
+  content: '\25BC'; /* Unicode for downward arrow */
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Optional: Add transition for smoother hover/focus effects */
+.form-select {
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+  /* table {
+    border-collapse: collapse;
+    width: 100%;
+  } */
+
+   #label-table td {
+    /* border: 1px solid black;  */
+    padding: 5px;
+    text-align: left;
+    /* width: 25vw; */
+  }
+  #label-table td:nth-child(odd) {
+   /* border: 2px solid black; */
+    padding-left: 2rem;
+    min-width:240px;
+    /* background-color: #ce7171;  */
+  }
+  .form-control{
+    min-width: 240px;
+  }
+  label{
+    font-size: 18px;
+    font-weight:bold ;
+  }
+  #label-table td:nth-child(even) {
+    
+    width: 28vw;
+    /* background-color: #8abe6c;  */
+  }
+
+  .centered-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+   }
+   
+   .tooltip-container {
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+   }
+   th,td {
+    vertical-align: middle;
+    align-items: center;
+    /* border:0.1px solid rgb(241, 233, 233) */
+  }
+   .tooltip-text {
+    display: flex;
+    height: max-content;
+    flex-direction: column;
+    font-size: 12px;
+    background-color: black;
+    color: #fff;
+    padding: 5px;
+    border-radius: 4px;
+    max-width: 40vw;
+    z-index: 1;
+    /* overflow-y: auto;  */
+    /* word-wrap: break-word; */
+    /* white-space: nowrap; */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+   }
+   
+   .centered-container:hover .tooltip-text {
+    display: block;
+    opacity: 1;
+   }
+   
+   .tooltip-text::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+   }
+ 
+  /* #tooltip {
+    position: relative;
+  }
+  
+  #tooltip:hover + .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  .tooltiptext {
+    visibility: hidden;
+    width: 40vw;
+ 
+    font-size: 10px;
+    border: 0.5px solid rgb(199, 196, 196);
+    background-color: #ffffff;
+    color: #000000;
+    text-align: center;
+    border-radius: 6px;
+    padding: 3px 0;
+    position: absolute;
+    z-index: 1;
+    top: -35px;
+ 
+    left: 100%;
+    transform: translateX(-50%);
+    opacity: 1;
+    transition: opacity 0.3s;
+  } */
+  

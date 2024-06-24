@@ -1,0 +1,72 @@
+.showform{
+    display: none;
+  }
+  th,td {
+    vertical-align: middle;
+  }
+
+#rideinfo tbody tr td:first-child {
+  font-weight: bold;
+  width: 10rem;
+}
+.bg-yellow {
+  background-color: rgb(206, 163, 44);
+  text-decoration: none;
+}
+
+.bg-orange {
+  background-color: rgb(236, 114, 15);
+}
+
+.bg-green {
+  background-color: rgb(65, 206, 65);
+}
+
+.bg-blue {
+  background-color: rgb(169, 80, 172);
+}
+
+.bg-pink {
+  background-color: rgb(197, 62, 84);
+}
+.bg-grey {
+  background-color: rgb(2, 189, 2);
+}
+.bg-cancel{
+  background-color: rgb(233, 72, 72);
+  
+}
+.bg-success{
+  background-color: rgb(32, 121, 39);
+  
+}
+.bg-assigning{
+  background-color: rgb(21, 165, 8);
+
+}
+.button-styling {
+  font-size: 15px;
+
+  /* cursor: pointer;
+  background-color: #007bff;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: inline-block;
+  text-align: center; */
+}
+
+.name-button-styling{
+  font-size: 25px;
+
+  /* cursor: none;
+  background-color: #007bff;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: inline-block;
+  text-align: center; */
+}
+.none{
+  font-size: 25px;
+}

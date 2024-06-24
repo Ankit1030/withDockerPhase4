@@ -1,0 +1,253 @@
+
+<div class="container-fluid">
+
+    <form [formGroup]="driverForm" (ngSubmit)="submitDriverProfile()" class="">
+      <div class="form-group">
+        <label for="username">Driver Name:</label>
+        <input type="text" id="drivername" placeholder="ABC" formControlName="dname" class="form-control">
+        <div *ngIf="driverForm.get('dname').invalid && driverForm.get('dname').touched" class="text-danger">User Name is required</div>
+        
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" placeholder="abc123@xyz.com" formControlName="demail" class="form-control">
+        <div *ngIf="driverForm.get('demail').invalid && driverForm.get('demail').touched" class="text-danger">Please enter a valid email address</div>
+        
+      </div>
+      <div class="form-group">
+        <label for="phone" >Phone:</label>
+        <div class="input-group"> 
+          <select formControlName="ccode" (change)="onCountrySelect()" class="custom-select border border-none col-md-2 form-select">
+            <!-- <option [disabled]="true" value="">{{defaultccode}}</option>    -->
+            @for(code of allcodes;track code._id){
+              <option [attr.data-id]="code._id" [value]="code._id">{{code.countryid.ccallcode}} ({{code.countryid.ccode}})</option>
+            }
+          </select>
+          <input type="text" id="phone" placeholder="11223 45566" formControlName="dphone" class="form-control mx-3">
+        </div>
+        <div *ngIf="driverForm.get('ccode').invalid && driverForm.get('ccode').touched" class="text-danger">Please select country code</div>
+        <div *ngIf="driverForm.get('dphone').invalid && driverForm.get('dphone').touched" class="text-danger">Please enter a 10 digit phone number</div>
+      </div>
+      <div class="form-group">
+        <label for="city" class="fw-4">City:</label>
+        <select class=" form-select" formControlName="dcity" >
+          <!-- <option value="" disabled="1" >{{defaultcity}}</option> -->
+          @for(city of allcities;track city._id){
+            <!-- <option [value]="city.city"> -->
+            <option [value]="city._id">
+              {{ city.city }}
+            </option>
+          }
+        </select>
+      </div>
+      <div *ngIf="driverForm.get('dcity').invalid && driverForm.get('dcity').touched" class="text-danger">City is required !</div>
+      <div class="form-group">
+        <label for="image" class="">Driver Profile:</label>
+        <input type="file" class="form-control" id="image" accept="image/jpeg,image/png" formControlName="dimage" (click)="onFileInputClick()"
+        (change)="onFileChange($event)">
+        <div *ngIf="fileSizeError" class="text-danger">File size exceeds 5MB</div>
+        <div *ngIf="fileTypeError" class="text-danger">Invalid file type. Only PNG and JPEG allowed.</div>
+      </div>
+  
+      <div *ngIf="!isimageupdated && this.driverForm.get('dimage').touched" class="text-danger">Please select image file</div>
+      @if(!updateBtnStatus){
+        
+        <button type="submit"  class="form-control btn btn-primary ">Submit</button>
+    }@else {
+  
+      <button type="submit"  class="form-control btn btn-success ">Update</button>
+    }
+    <button type="button"  class="form-control btn btn-dark mt-2 " (click)="clearmyform()">Clear</button>
+    </form>
+  </div>
+    
+  <div class=" ml-3 row my-2 gap-2">
+    <input class=" col-7 border rounded " style="font-size:16px;background-color: rgb(213, 217, 219);" id="searchbar" [(ngModel)]="searchTerm" type="search" placeholder="Search..">
+    <button class="btn btn-dark col-1 " style="height: 40px;" type="button" (click)="searchBtn_clicked()">Search</button>
+    <div class="col-2 btn">Sort: {{state}}</div>
+    <select [(ngModel)]="selectedOption" class="col-1" (change)="onSelectPageSize()">
+      <option *ngFor="let option of options" [value]="option">{{ option }}</option>
+    </select>
+    <!-- <input type="text" [(ngModel)]="state"> -->
+    
+  </div>
+  
+  <div class="container-fluid">
+    <div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover align-middle"  id="userDataTable" style="width:100%; text-align: center; font-size: 18px;">
+      <thead class="thead-dark" >
+          <tr class="text-center ">
+
+            <th >Sr no.</th>
+            <th style="width: 120px;">Profile image</th>
+            <th (click)="toggleState('dname')" scope="col">Name &nbsp; <i class="bi bi-funnel"></i></th>
+            <th (click)="toggleState('demail')" scope="col">Email &nbsp;<i class="bi bi-funnel"></i></th>
+            <th scope="col">Country code</th>
+            <th (click)="toggleState('dphone')" scope="col">Phone Number &nbsp;<i class="bi bi-funnel"></i></th>
+            <th scope="col">City</th>
+            <th scope="col">Add Bank</th>
+
+            <th scope="col" >Service </th>
+            <th scope="col" >Status</th>
+            <th scope="col" >Edit Action</th>
+            <th scope="col" >Delete Action</th>
+          </tr>
+      </thead>
+      <tbody class="align-middle border">
+        @for(driver of alldrivers;track driver._id){
+
+          <tr [attr.id]="driver._id">
+            <td>{{driver.driver_no}}</td>
+            <td><img class=" " [src]="backendUrl+'/uploads/alldrivers/'+driver.dimage" style="border-radius: 50%;" alt="Vehicle Image" width="80" height="80"></td>
+            <td>{{driver.dname}}</td>
+            <td>{{driver.demail}}</td>
+            <td>{{driver.ccode.ccallcode}}</td>
+            <td>{{driver.dphone}}</td>
+            <td>{{driver.dcity.city}}</td>
+            <td><button type="button" class="btn btn-success"   (click)="addBankDetails(driver)" data-bs-toggle="modal" data-bs-target="#BankDetailsModal">
+              @if(driver.bankstatus){
+                Existing 
+              }@else{
+                Add new
+              }
+            </button></td>
+
+            <td>
+              <button type="button" class="btn btn-dark" (click)="clicked_driver_status(driver._id)" data-bs-toggle="modal" data-bs-target="#addServiceModal">
+              <!-- <button type="button" class="btn btn-dark" (click)="clicked_driver_status(driver._id)" data-bs-toggle="modal" data-bs-target="#addServiceModal"> -->
+                @if(driver.servicetype){
+                  {{driver.servicetype.vname}}
+                }@else{
+                  Services
+                }
+              </button>
+            </td>
+            <td><!-- button.component.html -->
+              <!-- <button class="btn btn-primary"  [class.btn-primary]="isApprovedMap[driver._id]" 
+              [class.btn-danger]="!isApprovedMap[driver._id]"  (click)="toggleButton(driver)">{{ getButtonText(driver._id) }}</button> -->
+              <button class="btn btn-primary"  [ngClass]="driver.status ? 'btn-primary' : 'btn-danger'"   (click)="toggleButton(driver)">
+            @if(driver.status){
+              Approved
+            }@else {
+              Decined
+            }</button>
+
+              </td>
+            <td><button type="button" class="btn btn-success" (click)="editDriver(driver)"><i class="bi bi-pencil"></i></button></td>
+            <td><button type="button" class="btn btn-danger" (click)="deleteDriver(driver)"><i class="bi bi-trash"></i></button></td>
+          </tr>
+        }
+
+
+      </tbody>
+    </table>
+</div>
+</div>
+<div class="d-flex justify-content-center gap-3">
+  <button type="button" class="btn btn-dark" [disabled]="!isPrevButtonEnable" (click)="PrevBtn()">Prev</button>
+
+    <span class="fs-3">{{currentPage}}</span>
+
+  <button type="button" class="btn btn-dark" [disabled]="!isNextButtonEnable" (click)="NextBtn()">Next</button>
+</div>
+<!-- <button data-bs-toggle="modal" data-bs-target="#addServiceModal"> Call me  </button> -->
+<!-- <button type="button" class="btn btn-dark" (click)="selected_driver_status(driver._id)" data-bs-toggle="modal" data-bs-target="#addServiceModal">Services</button> -->
+
+<!-- POPUP MODAL OF SERVICE TYPE  -->
+<div class="modal fade" #addServiceModal id="addServiceModal" tabindex="-1" aria-labelledby="addServiceModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header  bg-dark text-center">
+          <h1 class="modal-title text-white my-auto mx-3 fw-3 fs-2" id="addServiceModalLabel">Vehicle Service</h1>
+          <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="vehicleForm" >
+                @if(isAddServiceModalOpen){
+                  <!-- <div class="px-3">
+                    <div class="card-container row" *ngFor="let vehicle of allvehicles">
+                      <div class="card-option border rounded p-2 my-2 ">
+                        <input type="radio" [id]="vehicle._id" [value]="vehicle._id" (change)="onSelectVehicle(vehicle._id)" formControlName="vehicle" class="mr-2">
+                        <label for="{{vehicle._id}}" class="cursor-pointer card-name font-weight-bold mx-3 text-center my-1">
+                          {{vehicle.vname}}
+                        </label>
+                      </div>
+                    </div>
+                      <div class="card-option border rounded p-2 my-2">
+                        <input type="radio"  value="null" (change)="onSelectVehicle('null')" formControlName="vehicle" class="mr-2">
+                        <label for="null" class="cursor-pointer card-name font-weight-bold mx-3 text-center my-1">
+                            None   
+                          </label>
+                      </div>
+                  </div> -->
+
+
+                  <div class="px-3">
+                    <div class="card-container row">
+                      <button *ngFor="let vehicle of allvehicles" 
+                              [ngClass]="{'selected': selectedvehicle === vehicle._id}" 
+                              (click)="onSelectVehicle(vehicle._id)" 
+                              class="text-center fw-bold fs-4 border rounded py-3 my-1">
+                        {{vehicle.vname}}
+                      </button>
+                    </div>
+                  </div>
+                }@else{
+                  <h2>Loading.....</h2>
+                }
+                </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" #closeButton data-bs-dismiss="modal">Close</button>
+            
+          <!-- <button type="button" (click)="onSubmit()" [disabled]="" class="btn btn-primary">Save Country</button> (click)="onclick()" -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+<!-- -------------------------BANK ACC DETAILS -->
+<div class="modal fade" id="BankDetailsModal" tabindex="-1" aria-labelledby="BankDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div  class="modal-content">
+
+        <div class="modal-header  bg-dark text-center">
+          <h1 class="modal-title text-white my-auto mx-3 fw-3 fs-2" id="addServiceModalLabel">Bank Account Details</h1>
+          <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="bankdetailsmodel" class="modal-body">
+          <form [formGroup]="bankForm" (ngSubmit)="onBankDetailsSubmit()">
+            <div class="mb-3">
+              <label for="accountHolderName" class="form-label">Account Holder Name:</label>
+              <input type="text" id="accountHolderName" class="form-control" formControlName="accountHolderName" />
+              <div *ngIf="bankForm.get('accountHolderName').invalid && bankForm.get('accountHolderName').touched" class="text-danger">
+                Account Holder Name is required.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="bankAccountNumber" class="form-label">Bank Account Number:</label>
+              <input type="text" id="bankAccountNumber" class="form-control" formControlName="bankAccountNumber" />
+              <div *ngIf="bankForm.get('bankAccountNumber').invalid && bankForm.get('bankAccountNumber').touched" class="text-danger">
+                Valid Bank Account Number is required.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="routingNumber" class="form-label">Routing Number:</label>
+              <input type="text" id="routingNumber" class="form-control" formControlName="routingNumber" />
+              <div *ngIf="bankForm.get('routingNumber').invalid && bankForm.get('routingNumber').touched" class="text-danger">
+                Valid Routing Number is required.
+              </div>
+            </div>
+            <button type="submit" id="submitbtn"  class="col-6 btn btn-primary" [disabled]="bankForm.invalid">Submit</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" #closeButton1 data-bs-dismiss="modal">Close</button>
+            
+          <!-- <button type="button" (click)="onSubmit()" [disabled]="" class="btn btn-primary">Save Country</button> (click)="onclick()" -->
+        </div>
+      </div>
+    </div>
+  </div>
+

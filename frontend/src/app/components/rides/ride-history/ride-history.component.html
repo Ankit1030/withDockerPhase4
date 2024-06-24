@@ -1,0 +1,380 @@
+<div class="container-fluid">
+  <form [formGroup]="dateForm" (ngSubmit)="onSubmit()">
+    <div class="row mt-3">
+      <!-- Date Range -->
+      <div class="col-xl-2 col-md-3">
+
+        <div class="">
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-label>From Date</mat-label>
+            <input matInput [matDatepicker]="fromPicker" formControlName="fromDate">
+            <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+            <mat-datepicker #fromPicker></mat-datepicker>
+          </mat-form-field>
+          <mat-error *ngIf="dateForm.get('fromDate').hasError('required')">
+            From Date is required
+          </mat-error>
+          <mat-error
+            *ngIf="dateForm.hasError('dates') && dateForm.get('fromDate').touched && dateForm.get('toDate').touched">
+            From Date should be less than To Date
+          </mat-error>
+
+        </div>
+
+      </div>
+
+      <div class="col-xl-2 col-md-3">
+
+        <div class="">
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-label>To Date</mat-label>
+            <input matInput [matDatepicker]="toPicker" formControlName="toDate">
+            <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+            <mat-datepicker #toPicker></mat-datepicker>
+            <mat-error *ngIf="dateForm.get('toDate').hasError('required')">
+              To Date is required
+            </mat-error>
+            <!-- <mat-error *ngIf="dateForm.hasError('dates')">
+                From Date should be less than To Date
+            </mat-error> -->
+          </mat-form-field>
+        </div>
+
+      </div>
+      <!-- </div> -->
+
+      <!-- Search Options -->
+      <!-- <div class="row"> -->
+      <div class="col-xl-4 col-md-6">
+        <!-- <div class=""> -->
+        <mat-form-field appearance="fill" class="w-100">
+          <input matInput type="text" placeholder="Search..." formControlName="searchfield">
+          <button mat-button matSuffix><mat-icon>search</mat-icon></button>
+        </mat-form-field>
+        <!-- </div> -->
+      </div>
+      <div class="col-xl-2 col-md-6">
+        <!-- <div class=""> -->
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="ridestatus">
+            <mat-option value="">All Rides</mat-option>
+            @for(status of allStatus;track status._id){
+            <mat-option [value]="status._id">
+              @switch(status._id){
+              @case (6){
+              Completed
+              }
+              @case (7){
+              Cancelled
+              }
+              @default{
+              NONE
+              }
+              }
+            </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <!-- </div> -->
+      </div>
+      <div class="col-xl-2 col-md-6">
+        <!-- <div class=""> -->
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Servicetype</mat-label>
+          <mat-select formControlName="vehicleid">
+            <mat-option value=>All Services</mat-option>
+            @for(vehicle of allVehicles; track vehicle._id ){
+            <mat-option [value]=vehicle._id>{{vehicle.vname}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <!-- </div> -->
+      </div>
+    </div>
+
+
+    <!-- Submit Button -->
+    <div class="d-flex justify-content-between mx-3 align-items-center">
+      <div class="d-flex gap-2 text-left">
+        <button mat-raised-button color="primary" type="submit">Submit</button>
+        <button class="btn btn-dark" type="button" (click)="clearForm()">Clear</button>
+      </div>
+      <div class=" text-right">
+        <button color="primary" class="btn btn-info" type="button" (click)="exportToCsv()">Download</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="card-body table-responsive p-2">
+    <table class="table table-striped table-hover align-middle" style="border-radius: 10px; text-align: center;">
+      <thead class="table-dark">
+        <tr class="text-center">
+          <th>Ride Id</th>
+          <th>User Name</th>
+          <th>Driver Name</th>
+          <th>Service Type</th>
+          <th>Pickup Location</th>
+          <th>Dropoff Location</th>
+          <th>Waypoints</th>
+          <th>Ride Date</th>
+          <th>Status</th>
+          <th>Feedback</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody class="text-align text-center">
+        @for(ride of allRideArray;track ride._id; let i = $index){
+        <tr class="text-center">
+          <td>{{ ride.ride_no }}</td>
+          <td>{{ ride.userDetails.uname }}</td>
+          <td>
+            @if(ride.driverDetails){
+            {{ ride.driverDetails.dname }}
+            }@else{
+            Not Assigned
+            }</td>
+          <td>{{ ride.vehicleDetails.vname }}</td>
+          <td>{{ ride.fromLocation }}</td>
+          <td>{{ ride.toLocation }}</td>
+          <td>
+            @if(ride.waypointsLocation.length > 0){
+            @for(item of ride.waypointsLocation;track $index){
+            {{ item }}
+            }
+            }@else{
+            No Waypoints
+            }
+          </td>
+          <td>{{ ride.bookDate }} {{ ride.bookTime }}</td>
+          <td>
+            <div class="btn btn-sm text-white" [ngClass]="ride.ridestatus === 6 ? 'btn-success' : 'btn-danger'"
+              style="font-size:12px;">
+              @if(ride.ridestatus === 6){
+              Completed
+              }@else{
+              Cancelled
+              }
+            </div>
+          </td>
+          <td>
+            @if(ride.ridestatus == 6 && !ride.feedback){
+            <button [disabled]="ride.ridestatus !== 6" class="btn btn-dark" type="button" data-bs-toggle="modal"
+              data-bs-target="#exampleModal" (click)="openFeedbackModal(ride)">FeedBack</button>
+
+            }@else if(ride.feedback && ride.feedback.rating){
+              <div class="btn border border-success">Submitted</div>
+            }
+            @else{
+            <div class="btn border border-danger" >Cancelled</div>
+            }
+            <!-- <button class="btn btn-" type="button" data-bs-toggle="modal" data-bs-target="#FeedbackModal" (click)="openFeedbackModal(ride._id)">FeedBack</button> -->
+          </td>
+          <td>
+            <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#showRideDetails"
+              (click)="openInfoModal(ride)">Info</button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FEEDBACK MODAL-------------------------------------------------- -->
+  <!-- -->
+  <div id="feedback-form-modal">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title fs-3 fw-bold my-auto" id="exampleModalLabel">Feedback Form</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="feedbackForm">
+              <div class="mb-3">
+                <label>How likely are you to recommend us to your friends?</label>
+                <div class="rating-input-wrapper d-flex justify-content-center mt-2">
+                  @for(item of allStars;track $index){
+
+                  <label><input [value]="item" formControlName="rating" type="radio" name="rating" /><span
+                      class="border rounded px-3 py-2">{{item}}</span></label>
+                  }
+                  
+                </div>
+                <div class="rating-labels d-flex justify-content-around mt-1">
+                  <label>Very unlikely</label>
+                  <label>Very likely</label>
+                </div>
+                <div *ngIf="feedbackForm.get('rating').invalid && feedbackForm.get('rating').touched" class="text-center text-danger">
+                  Rating is required.
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="feedback">Would you like to say something?</label>
+                <textarea formControlName="feedback" class="form-control" id="feedback" rows="3"></textarea>
+              </div>
+              <div *ngIf="feedbackForm.get('feedback').invalid && feedbackForm.get('feedback').touched" class="text-center text-danger">
+                Feedback is required and Feedback can only contain alphabets.
+              </div>
+               <!-- <div *ngIf="feedbackForm.get('feedback').errors.['onlyAlphabets']" class="text-danger">
+        Feedback can only contain alphabets.
+      </div> -->
+            </form>
+          </div>
+          <div class="modal-footer ">
+            <button type="button" class="btn btn-secondary" #closeButton  data-bs-dismiss="modal">Close</button>
+            <button type="button" (click)="FeedBackFormSubmit()" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- -----RIDE DETAILS MODAL--------------- -->
+  <div class="modal fade" #showRideDetails id="showRideDetails" tabindex="-1" aria-labelledby="showRideDetailsLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 90vw;height: 90vh; ">
+      <div class="modal-content" style="margin: 0; width: 90vw;height: 90%;">
+        <div class="modal-header">
+          <!-- <h5 class="modal-title" id="showRideDetailsLabel">Add Country</h5> -->
+          <button type="button" class="btn-close mr-2" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body table-responsive">
+
+          <!-- <div [ngClass]="ride.driverDetails ? 'name-button-styling' : 'button-styling'"> -->
+
+
+          <!---------------------------------INSIDE POPUP-----RIDE DETAILS---------------------------------->
+          <!-- <div class="" > -->
+          <h2 class="text-center align-items-center align-middle">Ride Details</h2>
+          <!-- <div class="table-responsive"> -->
+          <table *ngIf="ride" id="rideinfo"
+            class="table table-responsive table-striped table-hover align-middle table-bordered  ">
+            <thead class="bg-dark text-white">
+              <td>Ride id</td>
+              <!-- <td>User id</td> -->
+              <td>User Profile</td>
+              <td>User name</td>
+              <td>User Email</td>
+              <td>User Phone</td>
+              <td>Booking Time</td>
+              <td>Pickup Location</td>
+              <td>Drop-off Location</td>
+              <td>Waypoint</td>
+              <td>Service Type</td>
+              <td>Total Distance</td>
+              <td>Estimated Time</td>
+              <td>Estimated Fare Price</td>
+              <!-- @if(ride.driverDetails){
+              
+            } -->
+              <td *ngIf="ride.driverDetails"> Driver Profile </td>
+              <td *ngIf="ride.driverDetails"> Driver Name </td>
+              <td *ngIf="ride.driverDetails"> Driver Phone no. </td>
+              <td *ngIf="ride.driverDetails"> Driver E-mail</td>
+
+
+            </thead>
+            <tbody>
+
+              <td>{{ride.ride_no}}</td>
+
+
+              <!-- <td>: {{ride.userDetails._id}}</td> -->
+
+
+
+              <td><img class="" [src]="backendUrl+'/uploads/allusers/'+ride.userDetails.uimage"
+                  style="border-radius: 50%;" alt="Vehicle Image" width="80" height="80"></td>
+
+
+
+              <td>{{ride.userDetails.uname}}</td>
+
+
+
+              <td>{{ride.userDetails.uemail}}</td>
+
+
+
+              <td>{{ride.callcode}} {{ride.userDetails.uphone}}</td>
+
+
+
+              <td>{{ ride.bookDate }} ({{ride.bookTime}})</td>
+
+
+
+              <td>{{ride.fromLocation}}</td>
+
+
+
+              <td>{{ride.toLocation}}</td>
+
+              @if(ride.waypointsLocation.length > 0){
+
+
+              <td>{{ride.waypointsLocation}}</td>
+
+              }@else{
+
+              <!-- <td>Waypoint</td> -->
+              <td>null</td>
+
+              }
+
+
+              <td>{{ride.vehicleDetails.vname}}</td>
+
+
+
+              <td>{{ride.rideDistance}} km</td>
+
+
+
+              <td>{{ride.estimatedTime}}</td>
+
+
+
+              <td>{{ride.estimatedFarePrice }}</td>
+
+              @if(ride.driverDetails){
+
+
+              <td><img class="" [src]="backendUrl+'/uploads/alldrivers/'+ride.driverDetails.dimage"
+                  style="border-radius: 50%;" alt="Vehicle Image" width="80" height="80"></td>
+
+
+
+              <td>{{ ride.driverDetails.dname }}</td>
+
+
+
+              <td>{{ride.callcode}} {{ ride.driverDetails.dphone }}</td>
+
+
+
+              <td>{{ ride.driverDetails.demail }}</td>
+
+              }
+            </tbody>
+          </table>
+          <div id="map" class="text-center" style="height: 300px;"></div>
+
+          <!-- </div> -->
+          <!-- </div> -->
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" #closeButton data-bs-dismiss="modal">Close</button>
+
+          <!-- <button type="button" (click)="onSubmit()" [disabled]="" class="btn btn-primary">Save Country</button> (click)="onclick()" -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

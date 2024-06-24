@@ -1,0 +1,269 @@
+<!-- <p>create-ride works!</p> -->
+<div class="container-fluid">
+
+  <div id="maincontainer" class="col-sm-12   m-0 mt-2 p-0">
+    <form [formGroup]="Rideform" (ngSubmit)="onSubmit()">
+      <!-- <div> <span><label for="callCode">Call Code</label></span> 
+    <span><label for="phoneNumber">Phone Number</label></span></div> -->
+      <div class="input-group row m-0 mb-2 mb-1 p-2 border border-1 rounded-3"
+        style=" font-size: 16px; background-color: #e8f5e9;">
+        <!-- <div class="col"></div> -->
+        <!-- <label>Enter Phone Number :</label> -->
+        <select formControlName="callCode" (change)="onCountrySelect($event)"
+          class=" col-md-2 mr-2 col-sm-10 border text-secondary form-select" style="max-width: 8rem; min-width: 6rem;">
+          <option *ngFor="let code of callCodes" [attr.data-currency]="code.countryid.ccurr" [attr.data-id]="code.countryid.ccode" [value]="code.countryid._id">
+            {{code.countryid.ccallcode}} ({{code.countryid.ccode }}) </option>
+        </select>
+        <!-- <input type="text"  formControlName="phoneNumber" class=" border p-2 col-md-5" style="min-width: 14rem;" -->
+        <input type="text" formControlName="phoneNumber" class="border form-control  p-2 col-md-8 col-xs-12" (keypress)="onKeyPress($event)" placeholder="Phone Number">
+        <div class="col-md-2 text-right  px-0 mx-0">
+          <button type="submit"  class="btn text-white btn-info mr-2  form-control" [disabled]="Rideform.invalid"
+          >Search</button>
+            <!-- style="background-color: #1DA1F2;">Search</button> -->
+        </div>
+      </div>
+
+      <div *ngIf="Rideform.get('callCode')?.errors && Rideform.get('callCode')?.touched" class="text-danger">
+        <div *ngIf="Rideform.get('callCode').errors?.['required']">Call code is required</div>
+      </div>
+      <div *ngIf="Rideform.get('phoneNumber').errors && Rideform.get('phoneNumber')?.touched" class="text-danger">
+        <div *ngIf="Rideform.get('phoneNumber').errors?.['notANumber']">Input must be a number</div>
+        <div *ngIf="Rideform.get('phoneNumber').errors?.['required']">Phone number is required</div>
+        <div *ngIf="Rideform.get('phoneNumber').errors?.['pattern']">Please enter a 10 digit phone number</div>
+      </div>
+
+      @if(userFound){
+
+      <!-- <div class=""   > -->
+      <div class="  col-5 my-2 m p-2 mx-auto " [ngClass]="{'showform': !showUserDetails}">
+       
+        <div class="card-header fs-4 fw-bold text-center p-3 bg-warning"
+          style=" color:rgb(28, 104, 245)">
+          User Details
+        </div>
+        <div class="custom-card card-body ">
+     
+          <div class="table-responsive p-2 bg-light rounded-2">
+            <table class="table p-0 m-0">
+              <tbody>
+                <tr>
+                  <td class="font-weight-bold">Name</td>
+                  <td>{{ userFound.uname }}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">E-mail</td>
+                  <td>{{ userFound.uemail }}</td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">Phone</td>
+                  <td>{{ userFound.uphone }}</td>
+                </tr>
+                <tr class=" ">
+                  <td colspan="2" >
+                    <button type="button" class="btn btn-dark btn-sm" (click)="PrevHomePage()">Prev</button>
+                    <button type="button" class="btn btn-info btn-sm ml-2" (click)="okGotIt()">Next</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+   
+      }
+
+      <div class="paymentOption  mt-4 ml-4" *ngIf="0"><!-- PAYMENT OPTIONS  -->
+        <label for="paymentOption" class=" fw-bold fs-5 mr-3 row">Payment Options : </label>
+        <div class="form-check row mt-3">
+          <label for="" class="">
+            <input class="form-check-input border border-2 fs-5 my-0" type="radio" formControlName="paymentOption"
+              value="cash">
+            <div class="" style="font-size: 16px;">Cash</div>
+          </label>
+        </div>
+        <div class="form-check row">
+          <label for="">
+            <input class="form-check-input border border-2 fs-5 my-0" type="radio" formControlName="paymentOption"
+              value="card"><span class="" style="font-size: 16px;">Card</span>
+          </label>
+        </div>
+      </div>
+    </form>
+
+
+
+    <div [ngClass]="{'showform': !showRideDetails}" class=" col-12 border border-2 bg-light p-3 px-3 rounded-2 my-1">
+      <div class="fw-bold fs-4 text-center text-info"> Ride Details </div>
+      <form [formGroup]="waypointsForm" (ngSubmit)="onCalculate()">
+        <div class=" ">
+          <div class="form-group">
+            <div style="font-size: 16px;" for="from">From:</div>
+            <input type="text" class="form-control" id="from" #fromLocationRef formControlName="from"
+              placeholder="From Location..." required>
+            <div
+              *ngIf="waypointsForm.get('from').invalid && (waypointsForm.get('from').dirty || waypointsForm.get('from').touched)"
+              class="text-danger my-1">
+              <div *ngIf="waypointsForm.get('from').errors?.['required']">From location is required</div>
+            </div>
+            <div *ngIf="!isInsideZone " class="text-danger my-1">Service is not available at this place </div>
+          </div>
+          <div class="form-group">
+            <div style="font-size: 16px;" for="to">To:</div>
+            <input type="text" class="form-control" id="to" #toLocationRef formControlName="to"
+              placeholder="To Location..." required>
+            <div
+              *ngIf="waypointsForm.get('to').invalid && (waypointsForm.get('to').dirty || waypointsForm.get('to').touched)"
+              class="text-danger my-1">
+              <div *ngIf="waypointsForm.get('to').errors?.['required']">To location is required</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="my-1" style="font-size: 16px;">Waypoint:</div>
+        <div class="input-group my-2">
+          <input type="text" class="form-control" id="waypoint" #waypointLocationRef formControlName="waypoint"
+            placeholder="Enter Waypoint here..." required>
+          <button type="button" class="btn btn-secondary" style="width: 5rem;" (click)="addWaypoint()">Add</button>
+        </div>
+
+
+        <div class="col-12 m-0 p-0">
+          <div *ngFor="let waypoint of waypointsArray; let i = index" class="row m-0 p-0 mb-2 pr-2">
+            <span type=" text" disabled
+              class="col border border-2 rounded-2 p-2 bg-white d-flex align-items-center justify-content-start"
+              style="font-size: 16px;" disabled id="added-waypoint">{{waypoint}}</span>
+            <span (click)="removeWaypoint(i)"
+              class=" btn btn-danger  fs-5 d-flex align-items-center justify-content-center"
+              style="width: 2.8rem;">X</span>
+          </div>
+        </div>
+
+        <!-- <button type="submit" class="btn btn-success mt-3">Submit</button> -->
+        <div type="button" class="btn btn-info form-control" (click)="Calculate()">Calculate</div>
+      </form>
+    </div>
+
+    <!-- @if(1){ -->
+    @if(showPricingDetails){
+      <div class="row d-flex flex-row justify-content-around my-2">
+
+    <div class="center-content m-0 p-0 my-2 col-md-6" >
+      <!-- <div class="card-header">
+        <h3 class="card-title text-info">Pricing and Ride Details</h3>
+    </div> -->
+      <!-- <div  [ngClass]="{'showform': !showPricingDetails}"  class="center-content row w-100 my-2"> -->
+      <!-- <div class="custom-card d-flex align-items-center justify-content-center" style="background-color: #e8f5e9;"> -->
+        <div class="card-body d-flex align-items-center justify-content-center" style="background-color: #e8f5e9; vertical-align: center;">
+          <div>
+
+            <div class="text-info my-2 p-2 fs-5 text-center fw-bold">Ride Details</div>
+            
+            <ul class="list-group-prepend centered-list list-group-flush">
+              <div class="my-1"><span class="col-6">Total Distance: </span><span class="col-6"><b>{{rideDistance }} Km</b></span></div>
+              <div class="my-1"><span class="col-6">Total Time:</span><span class="col-6"> <b>{{rideTime}}</b></span></div>
+            </ul>
+            <!-- <table class="table p-0 m-0">
+              <tbody>
+                <tr class="row px-auto">
+                </tr> -->
+                <div class="text-center my-2 fs-4 text-align fw-bold text-info" >Fare Price For available Servicetypes </div>
+                @for(service of ServicePricing;track $index){
+                  <div class="d-flex my-2 justify-content-center align-items-center gap-3">
+                    <div class="">{{service.vehiclename}}:</div> 
+                    <div class=""><b> {{service.Totalprice | number:'1.2-2'}} {{selectedCurrency}}</b></div>
+                  </div>
+                  
+                }
+                <!-- <tr></tr> -->
+                <!-- </tbody>
+                </table> -->
+                
+              </div>
+        </div>
+      <!-- </div> -->
+    </div>
+
+    <div id="BookRideCard" class="col-md-6">
+      <div class="card-body">
+      <!-- <div class="card-body" style="background-color: #f8f9fa ;"> -->
+        <!-- <h5 class="card-title">Book a Ride</h5> -->
+        <form [formGroup]="BookingrideForm" class="ride-form">
+          <div class="mb-3">
+            <label for="serviceType" class="form-label">Select Service Type:</label>
+            <select formControlName="serviceType" id="serviceType" class="form-select">
+              <option *ngFor="let vehicle of availableServicetype" [value]="vehicle.vehicleid">{{vehicle.vehiclename}}
+              </option>
+            </select>
+            <div *ngIf="BookingrideForm.get('serviceType').touched && BookingrideForm.get('serviceType').invalid"
+              class="text-danger">
+              Please select a Service Type.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Payment Options:</label><br>
+            <div class="form-check form-check-inline">
+              <input type="radio" formControlName="paymentOption" id="paymentCash" value="cash"
+                class="form-check-input">
+              <label for="paymentCash" class="form-check-label">Cash</label>
+            </div>
+            <div *ngIf="hasCard" class="form-check form-check-inline">
+              <input type="radio" formControlName="paymentOption" id="paymentCard" value="card"
+                class="form-check-input">
+              <label for="paymentCard" class="form-check-label">Card</label>
+            </div>
+            <div *ngIf="BookingrideForm.get('paymentOption').touched && BookingrideForm.get('paymentOption').invalid"
+              class="text-danger">
+              Please select a payment option.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Select Booking Option :</label><br>
+            <div class="form-check form-check-inline">
+              <input type="radio" formControlName="bookingType" id="bookingNow" value="bookNow"
+                (change)="onchangeDateandTime()" class="form-check-input">
+              <label for="bookingNow" class="form-check-label">Book Now</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input type="radio" formControlName="bookingType" id="schedule" value="schedule"
+                (change)="onchangeDateandTime()" class="form-check-input">
+              <label for="schedule" class="form-check-label">Schedule</label>
+            </div>
+          </div>
+          @if(BookingrideForm.get('bookingType').value === 'schedule'){
+            <div class="mb-3">
+
+              <div>
+                <label for="scheduleDateTime">Select Date and Time:</label>
+                <input type="datetime-local" id="scheduleDateTime" formControlName="DateTime">
+              </div>
+              <div class="text-danger" *ngIf="BookingrideForm.get('DateTime')?.hasError('required') && BookingrideForm.get('DateTime')?.touched">
+                Date and Time is required
+              </div>
+              <div class="text-danger" *ngIf="BookingrideForm.get('DateTime')?.hasError('pastDate') && BookingrideForm.get('DateTime')?.touched">
+                Date and Time cannot be in the past
+              </div>
+            </div>
+          }
+          <div class="row d-flex justify-content-around align-items-center ">
+
+            <button  (click)="onBackPage()"  class="btn col-5 btn-dark">Previous</button>
+            <button type="submit" (click)="onSubmitRide()"  class="btn col-5 btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+    <!-- </div> -->
+  </div>
+
+    }
+
+  </div>
+<div class="container-fluid row m-0 p-0">
+  <div id="map" class="border border-2" style="height:41vh; width: 100vw;"></div>
+</div>
+
+
+
+
+</div>

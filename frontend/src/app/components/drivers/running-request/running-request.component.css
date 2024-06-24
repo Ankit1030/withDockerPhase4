@@ -1,0 +1,22 @@
+.bg-yellow {
+    background-color: yellow;
+  }
+  
+  .bg-orange {
+    background-color: rgb(223, 153, 25);
+  }
+  
+  .bg-green {
+    background-color: green;
+  }
+  
+  .bg-blue {
+    background-color: blue;
+  }
+  
+  .bg-pink {
+    background-color: rgb(204, 61, 85);
+  }
+  th{
+    padding: 20px;
+  }

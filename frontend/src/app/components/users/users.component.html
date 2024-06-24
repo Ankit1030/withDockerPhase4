@@ -1,0 +1,174 @@
+<div class="container-fluid">
+
+  <form [formGroup]="userForm" (ngSubmit)="submitUserProfile()" class="mt-1">
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" id="username" placeholder="ABC" formControlName="uname" class="form-control">
+      <div *ngIf="userForm.get('uname').invalid && userForm.get('uname').touched" class="text-danger">User Name is
+        required</div>
+
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" placeholder="abc123@xyz.com" formControlName="uemail" class="form-control">
+      <div *ngIf="userForm.get('uemail').invalid && userForm.get('uemail').touched" class="text-danger">Please enter a
+        valid email address</div>
+
+    </div>
+    <div class="form-group">
+      <label for="phone">Phone:</label>
+      <div class="input-group">
+        <select formControlName="ccode" class="custom-select">
+          <option [disabled]="true" value="">{{defaultccode}}</option>
+          @for(code of allcodes;track code._id){
+          <option [value]="code._id">{{code.countryid.ccallcode}} ({{code.countryid.ccode}})</option>
+          }
+        </select>
+        <input type="text" id="phone" formControlName="uphone" class="form-control mx-3">
+      </div>
+      <div *ngIf="userForm.get('ccode').invalid && userForm.get('ccode').touched" class="text-danger">Please select
+        country code</div>
+      <div *ngIf="userForm.get('uphone').invalid && userForm.get('uphone').touched" class="text-danger">Please enter a
+        10 digit phone number</div>
+    </div>
+    <div class="form-group">
+      <label for="image" class="">User Profile:</label>
+      <input type="file" class="form-control" id="uimage" #uimage accept="image/jpeg,image/png" formControlName="uimage"
+        (click)="onFileInputClick()" (change)="onFileChange($event)">
+      <div *ngIf="fileSizeError" class="text-danger">File size exceeds 5MB</div>
+      <div *ngIf="fileTypeError" class="text-danger">Invalid file type. Only PNG and JPEG allowed.</div>
+    </div>
+
+    <div *ngIf="!isimageupdated && this.userForm.get('uimage').touched" class="text-danger">Please select image file
+    </div>
+    @if(!updateBtnStatus){
+
+    <button type="submit" class="form-control btn btn-primary my-2">Submit</button>
+    }@else {
+
+    <button type="submit" class="form-control btn btn-success my-2">Update</button>
+    }
+    <button type="button" class="form-control btn btn-dark mt-2" (click)="clearmyForm()">Clear</button>
+  </form>
+</div>
+
+<!-- ------------------------------------- -->
+<div class="row mx-3 my-2">
+  <input class=" border col-md-7 mr-3 " style="background-color:#e0dfdf;" id="searchbar" [(ngModel)]="searchTerm"
+    type="text" placeholder="Search..">
+  <button class="btn btn-info col-md-2" type="button" (click)="searchBtn_clicked()">Search</button>
+  <div class="btn col-md-2">Sort: {{state}}</div>
+</div>
+
+<div class="container-fluid">
+  <div class="table-responsive">
+
+    <table class="table table-bordered table-striped table-hover align-middle" id="userDataTable"
+      style="width:100%; text-align: center; font-size: 18px;">
+      <thead class="thead-dark">
+        <tr class="text-center ">
+          <th>Sr no.</th>
+          <th (click)="toggleState('uname')" scope="col">Name &nbsp;<i class="bi bi-funnel"></i></th>
+          <th style="width: 120px;">Profile image</th>
+          <th (click)="toggleState('uemail')" scope="col">Email &nbsp;<i class="bi bi-funnel"></i></th>
+          <th scope="col">Country code</th>
+          <th (click)="toggleState('uphone')" scope="col">Phone Number &nbsp;<i class="bi bi-funnel"></i></th>
+          <th scope="col">Payment</th>
+          <th scope="col">Edit Action</th>
+          <th scope="col">Delete Action</th>
+        </tr>
+      </thead>
+      <tbody class="align-middle border">
+        @for(user of allusers;track user._id;){
+
+        <tr [attr.id]="user._id">
+
+          <td>{{user.user_no}}</td>
+          <td>{{user.uname}}</td>
+          <td><img class="" [src]="backendUrl+'/uploads/allusers/'+user.uimage" style="border-radius: 50%;"
+              alt="Vehicle Image" width="80" height="80"></td>
+          <td>{{user.uemail}}</td>
+          <td>{{user.ccode.ccallcode}}</td>
+          <td>{{user.uphone}}</td>
+          <td>
+            <button type="button" class="btn btn-dark" (click)="customerid(user)" data-bs-toggle="modal"
+              data-bs-target="#addCardModal">Cards</button>
+          </td>
+          <td>
+
+
+            <button type="button" class="btn btn-success" (click)="editUser(user)">Edit</button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-danger" (click)="deleteUser(user)">Delete</button>
+
+          </td>
+
+        </tr>
+        }
+      </tbody>
+
+    </table>
+  </div>
+</div>
+<div class="d-flex justify-content-center gap-3">
+  <button type="button" class="btn btn-dark" [disabled]="!isPrevButtonEnable" (click)="PrevBtn()">Prev</button>
+
+  <span class="fs-3">{{currentPage}}</span>
+
+  <button type="button" class="btn btn-dark" [disabled]="!isNextButtonEnable" (click)="NextBtn()">Next</button>
+</div>
+
+<br>
+<br>
+<br>
+
+<div class="">
+  <div class="modal fade" #addCardModal id="addCardModal" tabindex="-1" aria-labelledby="addCardModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <button (click)="submit()" class="btn btn-primary mx-auto form-control">Add new Card</button>
+          <form [formGroup]="cardForm">
+            @if(isAddCountryModalOpen){
+            <table class="table" style="text-align: start;">
+              <thead>
+                <tr>
+                  <th>default</th>
+                  <th style="text-align: center;">Name</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class=" " *ngFor="let card of cardDetails">
+                  <td class="">
+                    <input type="radio" id="card{{ card.id }}" [value]="card.id" (change)="onSelectCard(card.id)"
+                      [formControlName]="'selectedCard'" class="mr-2">
+                    <!-- <label for="card{{ card.id }}" class=""> </label> -->
+                  </td>
+                  <td class="">
+                    <label for="card{{ card.id }}" class="fs-5 fw-bold">{{ card.card.brand }} xxxx xxxx xxxx {{ card.card.last4 }}</label>
+                  <td class="">
+                    <button type="button" (click)="ondelete(card.id)" class="btn btn-danger"><i
+                        class="bi bi-trash"></i></button>
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+            }@else{
+            <h2>Loading.....</h2>
+            }
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" #closeButton data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

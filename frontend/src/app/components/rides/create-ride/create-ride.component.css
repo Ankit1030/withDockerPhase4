@@ -1,0 +1,90 @@
+/* .table {
+    border-collapse: collapse;
+    border-radius: 50% ;
+    border: 5px solid rgb(219, 94, 94);
+  }
+  .table td {
+
+    border-top: none;
+    background-color: #d8825a;
+    border-bottom: none; 
+  } */
+  body {
+    font-family: "Roboto", sans-serif; /* Use your preferred font family */
+    font-size: 16px; /* Adjust the default font size as needed */
+    line-height: 1.6; /* Adjust line height for better readability */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    background-color: #f8f9fa; /* Set background color */
+    color: #333; /* Set default text color */
+  }
+  
+  #map{
+    border: 5px solid grey;
+  }
+  .card {
+    border-radius: 10px;
+  }
+  
+  .card-header {
+    border-radius: 10px 10px 0 0;
+  }
+  
+  .table td {
+    border-collapse: collapse;
+    border: none;
+    width:80px ;
+    font-size: 16px;
+    text-align: center;
+    vertical-align: middle;
+
+  }
+  
+  .table tbody tr:nth-child(odd) {
+    background-color: #f8f9fa; /* Alternate row background color */
+    
+  }
+  
+  .font-weight-bold {
+    font-weight: bold;
+  }
+  
+  .showform{
+    display: none;
+  }
+
+  .center-content {
+    display: flex;
+    justify-content: center;
+    /* width: 100%; */
+  }
+  
+  .custom-card {
+    width: 100%;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+  .card-body{
+    /* background-color: rgb(146, 143, 143); */
+    /* color: white; */
+  }
+  
+  .custom-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  .centered-list {
+    list-style-type: none;
+    padding: 0;
+    text-align: center; /* Align list items horizontally to the center */
+  }
+  
+  .centered-list li {
+    display: inline-block; /* Display list items horizontally */
+    margin: 0 10px; /* Add some margin between list items */
+  }
+  
+  label {
+    font-size: 16px;
+    
+  }

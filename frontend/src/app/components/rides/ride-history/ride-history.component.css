@@ -1,0 +1,41 @@
+mat-form-field {
+    display: block;
+    margin-bottom: 16px;
+  }
+  
+  .error {
+    color: red;
+  }
+  th,td {
+    vertical-align: middle;
+  text-align: center;
+    align-items: center;
+    border:0.1px solid rgb(241, 233, 233)
+  }
+  
+/* 
+  #feedback-form-wrapper #floating-icon > button {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: rotate(-90deg) translate(50%, -50%);
+    transform-origin: right;
+  } */
+
+  .rating-input-wrapper input[type="radio"] {
+    display: none;
+  }
+
+  .rating-input-wrapper input[type="radio"] ~ span {
+    cursor: pointer;
+  }
+
+  .rating-input-wrapper input[type="radio"]:checked ~ span {
+    background-color: #4261dc;
+    color: #fff;
+  }
+
+  .rating-labels > label {
+    font-size: 14px;
+    color: #777;
+  }
